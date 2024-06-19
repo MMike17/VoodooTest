@@ -7,11 +7,15 @@ public class GameManager : MonoBehaviour
 	// I should really make sure the save state makes sense at all times
 	public static Save save { get; private set; }
 
+	[Header("Settings")]
+	public bool prettySave;
+
 	[Header("Managers")]
 	public PanelsManager panelsManager;
 
 	void Awake()
 	{
+		DataManager.prettySave = prettySave;
 		save = DataManager.LoadData<Save>();
 
 		InitManagers();
