@@ -8,6 +8,9 @@ public class PanelsManager : MonoBehaviour
 	[Header("References")]
 	public List<GamePanel> gamePanels;
 
+	[Header("Debug")]
+	public PanelTag currentPanel_debug;
+
 	public enum PanelTag
 	{
 		NONE,
@@ -16,7 +19,7 @@ public class PanelsManager : MonoBehaviour
 		Lose
 	}
 
-	public PanelTag currentPanel;
+	PanelTag currentPanel;
 
 	public void Init()
 	{
@@ -32,6 +35,17 @@ public class PanelsManager : MonoBehaviour
 			Debug.LogError("Can't pop panel while another panel is open");
 			return;
 		}
+
+		currentPanel_debug = currentPanel = tag;
+		GamePanel selected = gamePanels.Find(item => item.tag == tag);
+
+		if (selected == null)
+		{
+			Debug.LogError("Please assign a panel in the editor for tag \"" + tag + "\"");
+			return;
+		}
+
+		selected.panel.Open();
 	}
 
 	void ClearPanel() => currentPanel = PanelTag.NONE;
