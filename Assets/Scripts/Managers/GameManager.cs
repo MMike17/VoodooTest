@@ -21,4 +21,6 @@ public class GameManager : MonoBehaviour
 	{
 		panelsManager.Init();
 	}
+
+	public static void SaveData() => DataManager.SaveData(save);
 }
