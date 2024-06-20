@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
 	[Header("Managers")]
 	public PanelsManager panelsManager;
+	public GridManager gridManager;
 
 	void Awake()
 	{
@@ -23,7 +24,8 @@ public class GameManager : MonoBehaviour
 
 	void InitManagers()
 	{
-		panelsManager.Init();
+		// panelsManager.Init();
+		gridManager.Init();
 	}
 
 	public static void SaveData() => DataManager.SaveData(save);
