@@ -30,6 +30,7 @@ public class GridManager : MonoBehaviour
 	public Cell cellPrefab;
 
 	List<Layer> cellsLayers;
+	Action<bool> SetTilt;
 
 	void OnDrawGizmos()
 	{
@@ -74,8 +75,10 @@ public class GridManager : MonoBehaviour
 		}
 	}
 
-	public void Init()
+	public void Init(Action<bool> setTilt)
 	{
+		SetTilt = setTilt;
+
 		GenerateGridLayers();
 		StartCoroutine(ShowcaseAnim());
 	}
@@ -161,6 +164,7 @@ public class GridManager : MonoBehaviour
 
 		transform.SetPositionAndRotation(gameplayTarget.position, gameplayTarget.rotation);
 
+		SetTilt(true);
 		// TODO : Start game here
 	}
 

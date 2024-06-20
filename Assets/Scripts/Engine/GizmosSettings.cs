@@ -18,4 +18,16 @@ public class GizmosSettings : EditorScriptableObject<GizmosSettings>
 	[Space]
 	public int layerDisplay;
 	public Color layerColor;
+
+	[Header(nameof(CameraManager))]
+	public bool enableCamera;
+	public float camTargetSize;
+	public Color camTargetColor;
+	public float camTargetSimSize;
+	public Color camTargetSimColor;
+	[Space]
+	[Range(-1, 1)]
+	public float simulatedXTilt;
+	[Range(-1, 1)]
+	public float simulatedYTilt;
 }

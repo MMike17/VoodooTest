@@ -16,6 +16,13 @@ MonoBehaviour:
   showExpandLayer: 0
   layerPointSize: 0.2
   layerNormalColor: {r: 0, g: 0.60958433, b: 1, a: 0.5019608}
-  layerExpandColor: {r: 0.9528215, g: 1, b: 0, a: 0.5019608}
+  layerExpandColor: {r: 0, g: 0.99058723, b: 1, a: 0.5019608}
   layerDisplay: -1
-  layerColor: {r: 1, g: 0, b: 0, a: 0.5019608}
+  layerColor: {r: 0.60837364, g: 0, b: 1, a: 0.5019608}
+  enableCamera: 1
+  camTargetSize: 0.2
+  camTargetColor: {r: 1, g: 0.7529935, b: 0, a: 0.5019608}
+  camTargetSimSize: 0.1
+  camTargetSimColor: {r: 1, g: 0, b: 0, a: 0.5019608}
+  simulatedXTilt: -0.29
+  simulatedYTilt: 0.45

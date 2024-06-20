@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 	public bool prettySave;
 
 	[Header("Managers")]
+	public CameraManager cameraManager;
 	public PanelsManager panelsManager;
 	public GridManager gridManager;
 
@@ -24,8 +25,9 @@ public class GameManager : MonoBehaviour
 
 	void InitManagers()
 	{
+		cameraManager.Init();
 		// panelsManager.Init();
-		gridManager.Init();
+		gridManager.Init(cameraManager.SetCanTilt);
 	}
 
 	public static void SaveData() => DataManager.SaveData(save);
