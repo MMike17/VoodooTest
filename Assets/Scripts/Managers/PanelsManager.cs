@@ -15,6 +15,8 @@ public class PanelsManager : MonoBehaviour
 	{
 		NONE,
 		Main_menu,
+		GameUI,
+		Settings,
 		Win,
 		Lose
 	}
@@ -23,7 +25,27 @@ public class PanelsManager : MonoBehaviour
 
 	public void Init()
 	{
-		gamePanels.ForEach(item => item.panel.Init(ClearPanel));
+		gamePanels.ForEach(item =>
+		{
+			switch (item.panel)
+			{
+				case MainMenuPanel mainMenu:
+					mainMenu.Init(() => PopPanel(PanelTag.GameUI));
+					break;
+
+				case GameUIPanel gameUI:
+					gameUI.Init(() => PopPanel(PanelTag.Settings));
+					break;
+
+				case SettingsPanel settings:
+					settings.Init(() =>
+					{
+						PopPanel(PanelTag.GameUI);
+						GameManager.SaveData();
+					});
+					break;
+			}
+		});
 
 		PopPanel(PanelTag.Main_menu);
 	}
@@ -47,8 +69,6 @@ public class PanelsManager : MonoBehaviour
 
 		selected.panel.Open();
 	}
-
-	void ClearPanel() => currentPanel = PanelTag.NONE;
 
 	[Serializable]
 	public class GamePanel

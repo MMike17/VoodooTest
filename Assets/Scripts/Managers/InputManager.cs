@@ -13,6 +13,12 @@ public class InputManager : MonoBehaviour
 	public KeyCode pcTiltLeft = KeyCode.LeftArrow;
 	public KeyCode pcTiltRight = KeyCode.RightArrow;
 
+	public enum TiltType
+	{
+		Gyroscope,
+		Drag
+	}
+
 	Vector2 deviceTilt;
 
 	void Awake()

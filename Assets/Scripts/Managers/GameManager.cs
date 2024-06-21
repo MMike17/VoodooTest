@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
 	void InitManagers()
 	{
 		cameraManager.Init();
-		// panelsManager.Init();
+		panelsManager.Init();
 		gridManager.Init(cameraManager.SetCanTilt);
 	}
 
