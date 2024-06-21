@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// TODO : Add description here
+/// <summary>Manages the emulation of mobile inputs on PC</summary>
 public class InputManager : MonoBehaviour
 {
 	static InputManager instance;
@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
 	public KeyCode pcTiltLeft = KeyCode.LeftArrow;
 	public KeyCode pcTiltRight = KeyCode.RightArrow;
 
-	static Vector2 deviceTilt;
+	Vector2 deviceTilt;
 
 	void Awake()
 	{
@@ -25,18 +25,30 @@ public class InputManager : MonoBehaviour
 		if (Application.isEditor)
 		{
 			if (Input.GetKey(instance.pcTiltRight))
-				deviceTilt += Vector2.right * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt += Vector2.right * instance.pcTiltSensitivity * Time.deltaTime;
 			else if (Input.GetKey(instance.pcTiltLeft))
-				deviceTilt -= Vector2.right * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt -= Vector2.right * instance.pcTiltSensitivity * Time.deltaTime;
 			else
-				deviceTilt.x = Mathf.MoveTowards(deviceTilt.x, 0, instance.pcTiltGravity * Time.deltaTime);
+			{
+				instance.deviceTilt.x = Mathf.MoveTowards(
+					instance.deviceTilt.x,
+					0,
+					instance.pcTiltGravity * Time.deltaTime
+				);
+			}
 
 			if (Input.GetKey(instance.pcTiltUp))
-				deviceTilt += Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt += Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
 			else if (Input.GetKey(instance.pcTiltDown))
-				deviceTilt -= Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt -= Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
 			else
-				deviceTilt.y = Mathf.MoveTowards(deviceTilt.y, 0, instance.pcTiltGravity * Time.deltaTime);
+			{
+				instance.deviceTilt.y = Mathf.MoveTowards(
+					instance.deviceTilt.y,
+					0,
+					instance.pcTiltGravity * Time.deltaTime
+				);
+			}
 		}
 		else
 		{
@@ -44,14 +56,14 @@ public class InputManager : MonoBehaviour
 			Input.gyro.enabled = true;
 
 			// I'm explicitely casting this to Vector2 to remember that I'm getting a Vector3
-			deviceTilt = (Vector2)Input.gyro.attitude.eulerAngles;
+			instance.deviceTilt = (Vector2)Input.gyro.attitude.eulerAngles;
 		}
 
-		return deviceTilt;
+		return instance.deviceTilt;
 	}
 
 	// TODO : Call this from the UI
-	public static void ResetTilt() => deviceTilt = Vector2.zero;
+	public static void ResetTilt() => instance.deviceTilt = Vector2.zero;
 
 	// what do we need here ?
 

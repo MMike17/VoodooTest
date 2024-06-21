@@ -89,11 +89,14 @@ public class CameraManager : MonoBehaviour
 		if (!canTilt)
 			return;
 
-		// mapping tilt to min/max (will be clamped)
+		// mapping tilt to min/max while keeping +/- side (will be clamped)
 		Vector2 currentTilt = InputManager.GetTilt();
+		int xSide = currentTilt.x > 0 ? 1 : -1;
+		int ySide = currentTilt.y > 0 ? 1 : -1;
+
 		currentTilt = new Vector2(
-			Mathf.Lerp(0, 1, Mathf.InverseLerp(minTiltMagnitude, maxTiltMagnitude, currentTilt.x)),
-			Mathf.Lerp(0, 1, Mathf.InverseLerp(minTiltMagnitude, maxTiltMagnitude, currentTilt.y))
+			Mathf.InverseLerp(minTiltMagnitude, maxTiltMagnitude, currentTilt.x * xSide) * xSide,
+			Mathf.InverseLerp(minTiltMagnitude, maxTiltMagnitude, currentTilt.y * ySide) * ySide
 		);
 
 		(Vector3 pos, Vector3 dir) posAndDir = GetCameraPosAndDir(currentTilt);
@@ -105,8 +108,8 @@ public class CameraManager : MonoBehaviour
 	(Vector3, Vector3) GetCameraPosAndDir(Vector2 currentTilt)
 	{
 		// determine which side of the grid are we going towards
-		Transform xTarget;
-		Transform yTarget;
+		Transform xTarget = centerTarget;
+		Transform yTarget = centerTarget;
 
 		if (currentTilt.x > 0)
 			xTarget = rightTarget;
@@ -124,13 +127,23 @@ public class CameraManager : MonoBehaviour
 			yTarget = downTarget;
 		}
 
-		// this is weird, it's made to get a form of spherized Lerp on position
-		float tiltRatio = currentTilt.y / (currentTilt.x + currentTilt.y);
+		// no input
+		if (currentTilt == Vector2.zero)
+			return (centerTarget.position, centerTarget.forward);
 
-		return (
-			Vector3.Lerp(xTarget.position, yTarget.position, tiltRatio),
-			Vector3.LerpUnclamped(xTarget.forward, yTarget.forward, tiltRatio)
+		Vector3 pos = Vector3.Lerp(
+			Vector3.Lerp(centerTarget.position, xTarget.position, currentTilt.x),
+			Vector3.Lerp(centerTarget.position, yTarget.position, currentTilt.y),
+			0.5f
 		);
+
+		Vector3 dir = Vector3.Lerp(
+			Vector3.LerpUnclamped(centerTarget.forward, xTarget.forward, currentTilt.x),
+			Vector3.LerpUnclamped(centerTarget.forward, yTarget.forward, currentTilt.y),
+			0.5f
+		);
+
+		return (2 * pos - centerTarget.position, 2 * dir - centerTarget.forward);
 	}
 
 	// this is really simple and I shouldn't need this but I like to make my code extra explicit on this kind of things
