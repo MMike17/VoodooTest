@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
 	static InputManager instance;
 
 	[Header("Settings")]
+	public float mobileTiltSensitivity;
 	public float pcTiltSensitivity;
 	public float pcTiltGravity;
 	public KeyCode pcTiltUp = KeyCode.UpArrow;
@@ -58,18 +59,30 @@ public class InputManager : MonoBehaviour
 		}
 		else
 		{
-			// TODO : Do I need this ?
-			Input.gyro.enabled = true;
+			switch (GameManager.save.tiltType)
+			{
+				case TiltType.Gyroscope:
+					// TODO : Do I need this ?
+					Input.gyro.enabled = true;
 
-			// I'm explicitely casting this to Vector2 to remember that I'm getting a Vector3
-			instance.deviceTilt = (Vector2)Input.gyro.attitude.eulerAngles;
+					// I'm explicitely casting this to Vector2 to remember that I'm getting a Vector3
+					instance.deviceTilt = (Vector2)Input.gyro.attitude.eulerAngles;
+					break;
+
+				case TiltType.Drag:
+					if (Input.touchCount == 0)
+						instance.deviceTilt = Vector2.zero;
+					else
+						instance.deviceTilt += Input.GetTouch(0).deltaPosition * instance.mobileTiltSensitivity;
+					break;
+			}
 		}
 
 		return instance.deviceTilt;
 	}
 
 	// TODO : Call this from the UI
-	public static void ResetTilt() => instance.deviceTilt = Vector2.zero;
+	public void ResetTilt() => deviceTilt = Vector2.zero;
 
 	// what do we need here ?
 
