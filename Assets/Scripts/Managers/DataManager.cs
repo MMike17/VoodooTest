@@ -16,7 +16,7 @@ public static class DataManager
 
 		string jsonData = JsonUtility.ToJson(data, prettySave);
 
-		if (!string.IsNullOrWhiteSpace(saveKey))
+		if (string.IsNullOrWhiteSpace(saveKey))
 		{
 			Debug.LogError("You can't save data with an empty or whitespace key (key is \"" + saveKey + "\")");
 			return;

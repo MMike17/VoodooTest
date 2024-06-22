@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour
 
 	Vector2 deviceTilt;
 
-	void Awake()
+	public void Init()
 	{
 		instance = this;
 	}
