@@ -894,7 +894,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1079,17 +1079,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1802575873}
     m_Modifications:
-    - target: {fileID: 1099244537360219205, guid: 2ae05c532e04cd444a27f9309c793153,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1099244537360219207, guid: 2ae05c532e04cd444a27f9309c793153,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 22100000, guid: 9f7aaddc822732a45a5bb3173ff0ad71,
-        type: 2}
     - target: {fileID: 1099244537360219224, guid: 2ae05c532e04cd444a27f9309c793153,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1200,11 +1189,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainMenu
       objectReference: {fileID: 0}
-    - target: {fileID: 1099244537360219225, guid: 2ae05c532e04cd444a27f9309c793153,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ae05c532e04cd444a27f9309c793153, type: 3}
 --- !u!1001 &6067909434630971862
@@ -1218,11 +1202,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1770457855, guid: c193d8cd394bb9647a53d39d7c5d2722, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 22100000, guid: 9f7aaddc822732a45a5bb3173ff0ad71,
-        type: 2}
     - target: {fileID: 1862995305, guid: c193d8cd394bb9647a53d39d7c5d2722, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1362,11 +1341,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1137696654, guid: c10182161a47c3042bb0fdc6e160ff02, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 22100000, guid: 5bf509bcd2aba2a4cbfe824643e7c91e,
-        type: 2}
     - target: {fileID: 1737878113, guid: c10182161a47c3042bb0fdc6e160ff02, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -1555,11 +1529,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7834350911607834765, guid: c10182161a47c3042bb0fdc6e160ff02,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c10182161a47c3042bb0fdc6e160ff02, type: 3}

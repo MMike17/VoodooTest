@@ -657,7 +657,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
+  m_fontSize: 94.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -904,7 +904,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -175.18036}
+  m_AnchoredPosition: {x: 0, y: -403.201}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1737878115
@@ -1206,7 +1206,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
+  m_fontSize: 38.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1417,7 +1417,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
+  m_fontSize: 53.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1676,7 +1676,7 @@ Animator:
   m_GameObject: {fileID: 7704280810663970800}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 5bf509bcd2aba2a4cbfe824643e7c91e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1831,7 +1831,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1001 &4305040323718395225
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1847,7 +1847,7 @@ PrefabInstance:
     - target: {fileID: 900003641815511490, guid: bc4c65d4e3dd3784cafeb8cfd8a70302,
         type: 3}
       propertyPath: m_fontSize
-      value: 10
+      value: 53.7
       objectReference: {fileID: 0}
     - target: {fileID: 4436325353387338524, guid: bc4c65d4e3dd3784cafeb8cfd8a70302,
         type: 3}
