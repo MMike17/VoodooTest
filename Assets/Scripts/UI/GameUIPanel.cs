@@ -8,8 +8,6 @@ public class GameUIPanel : Panel
 	public Button openSettingsButton;
 	public Button resetTiltButton;
 
-	// TODO : Make panel prefab
-
 	public void Init(Action OnOpenSettings, Action ResetTilt)
 	{
 		resetTiltButton.gameObject.SetActive(GameManager.save.tiltType == InputManager.TiltType.Gyroscope);

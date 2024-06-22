@@ -6,8 +6,6 @@ using static InputManager;
 
 public class SettingsPanel : Panel
 {
-	// TODO : Make panel prefab
-
 	[Header("References")]
 	public Toggle sound;
 	public Toggle vibrations;

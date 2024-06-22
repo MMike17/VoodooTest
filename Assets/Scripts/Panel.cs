@@ -6,8 +6,6 @@ public abstract class Panel : MonoBehaviour
 	[Header("References")]
 	public Animator anim;
 
-	// TODO : Make "Open" animation
-	// TODO : Make "Close" animation
-
 	public void Open() => anim.Play("Open");
+	public void Close() => anim.Play("Close");
 }

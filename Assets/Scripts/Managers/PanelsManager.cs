@@ -45,6 +45,8 @@ public class PanelsManager : MonoBehaviour
 					});
 					break;
 			}
+
+			item.panel.anim.Play("Close", 0, 1);
 		});
 
 		PopPanel(PanelTag.Main_menu);
@@ -53,12 +55,8 @@ public class PanelsManager : MonoBehaviour
 	public void PopPanel(PanelTag tag)
 	{
 		if (currentPanel != PanelTag.NONE)
-		{
-			Debug.LogError("Can't pop panel while another panel is open");
-			return;
-		}
+			gamePanels.Find(item => item.tag == currentPanel).panel.Close();
 
-		currentPanel_debug = currentPanel = tag;
 		GamePanel selected = gamePanels.Find(item => item.tag == tag);
 
 		if (selected == null)
@@ -67,6 +65,7 @@ public class PanelsManager : MonoBehaviour
 			return;
 		}
 
+		currentPanel_debug = currentPanel = tag;
 		selected.panel.Open();
 	}
 
