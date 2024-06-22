@@ -23,7 +23,7 @@ public class PanelsManager : MonoBehaviour
 
 	PanelTag currentPanel;
 
-	public void Init()
+	public void Init(Action ResetTilt)
 	{
 		gamePanels.ForEach(item =>
 		{
@@ -34,7 +34,7 @@ public class PanelsManager : MonoBehaviour
 					break;
 
 				case GameUIPanel gameUI:
-					gameUI.Init(() => PopPanel(PanelTag.Settings));
+					gameUI.Init(() => PopPanel(PanelTag.Settings), ResetTilt);
 					break;
 
 				case SettingsPanel settings:

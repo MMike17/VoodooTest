@@ -273,6 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5994ef3fa482da043970669e875baa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mobileTiltSensitivity: 1
   pcTiltSensitivity: 5
   pcTiltGravity: 6
   pcTiltUp: 273
@@ -1070,6 +1071,7 @@ MonoBehaviour:
   cameraManager: {fileID: 629214013}
   panelsManager: {fileID: 1802575874}
   gridManager: {fileID: 173964579}
+  inputManager: {fileID: 182242492}
 --- !u!1001 &1099244538098730485
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1390,6 +1392,31 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3389081749680831597, guid: c10182161a47c3042bb0fdc6e160ff02,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252192990000851138, guid: c10182161a47c3042bb0fdc6e160ff02,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252192990000851138, guid: c10182161a47c3042bb0fdc6e160ff02,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252192990000851138, guid: c10182161a47c3042bb0fdc6e160ff02,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252192990000851138, guid: c10182161a47c3042bb0fdc6e160ff02,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252192990000851138, guid: c10182161a47c3042bb0fdc6e160ff02,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0

@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 	public CameraManager cameraManager;
 	public PanelsManager panelsManager;
 	public GridManager gridManager;
+	public InputManager inputManager;
 
 	void Awake()
 	{
@@ -25,8 +26,8 @@ public class GameManager : MonoBehaviour
 
 	void InitManagers()
 	{
-		cameraManager.Init();
-		panelsManager.Init();
+		cameraManager.Init(inputManager.ResetTilt);
+		panelsManager.Init(inputManager.ResetTilt);
 		gridManager.Init(cameraManager.SetCanTilt);
 	}
 

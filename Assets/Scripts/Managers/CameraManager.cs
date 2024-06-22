@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>Manages procedural placement of the camera depending on tilt</summary>
@@ -16,6 +17,7 @@ public class CameraManager : MonoBehaviour
 	public Transform leftTarget;
 	public Transform rightTarget;
 
+	Action ResetTilt;
 	bool canTilt;
 
 	void OnDrawGizmos()
@@ -79,8 +81,9 @@ public class CameraManager : MonoBehaviour
 		}
 	}
 
-	public void Init()
+	public void Init(Action resetTilt)
 	{
+		ResetTilt = resetTilt;
 		SetCanTilt(false);
 	}
 
@@ -150,6 +153,6 @@ public class CameraManager : MonoBehaviour
 	public void SetCanTilt(bool state)
 	{
 		canTilt = state;
-		InputManager.ResetTilt();
+		ResetTilt();
 	}
 }
