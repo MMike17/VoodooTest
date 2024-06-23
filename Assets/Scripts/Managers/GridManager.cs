@@ -13,6 +13,7 @@ public class GridManager : MonoBehaviour
 	public float cellSize;
 	public float cellSpacing;
 	[Space]
+	public int minLinkLength;
 	public Color[] cellColors;
 	[Space]
 	public int gridDepth;
@@ -35,6 +36,9 @@ public class GridManager : MonoBehaviour
 
 	List<Layer> cellsLayers;
 	Action<bool> SetTilt;
+	List<Cell> linkedCells;
+	bool canLink;
+	bool isLinking;
 
 	void OnDrawGizmos()
 	{
@@ -82,6 +86,9 @@ public class GridManager : MonoBehaviour
 	public void Init(Action<bool> setTilt)
 	{
 		SetTilt = setTilt;
+		linkedCells = new List<Cell>();
+		canLink = false;
+		isLinking = false;
 
 		GenerateGridLayers();
 	}
@@ -105,11 +112,11 @@ public class GridManager : MonoBehaviour
 			layerTransform.localPosition = new Vector3(0, 0, lastLayerZ - totalLayerSpacing * i);
 			cellsLayers.Add(new Layer(layerTransform, lastExpandSpacing - expandedSpacing * i));
 
-			GenerateGridCells(cellsLayers[i]);
+			GenerateGridCells(cellsLayers[i], (gridDepth - 1) - i);
 		}
 	}
 
-	void GenerateGridCells(Layer layer)
+	void GenerateGridCells(Layer layer, int layerIndex)
 	{
 		float firstCellX = (-(cellSize * gridSize + cellSpacing * (gridSize - 1)) + cellSize) / 2;
 		float firstCellY = -firstCellX;
@@ -121,7 +128,7 @@ public class GridManager : MonoBehaviour
 			for (int x = 0; x < gridSize; x++)
 			{
 				Transform cell = new GameObject("Cell " + (y + x) + " (" + layer.transform.name + ")").transform;
-				layer.cells.Add(cell);
+				layer.cells.Add((cell, new Vector3Int(x, y, layerIndex)));
 
 				cell.SetParent(layer.transform);
 				cell.localPosition = new Vector3(
@@ -131,6 +138,12 @@ public class GridManager : MonoBehaviour
 				);
 			}
 		}
+	}
+
+	void Update()
+	{
+		if (isLinking && InputManager.GetPointerUp())
+			FinishLink();
 	}
 
 	IEnumerator ShowcaseAnim()
@@ -168,27 +181,86 @@ public class GridManager : MonoBehaviour
 		transform.SetPositionAndRotation(gameplayTarget.position, gameplayTarget.rotation);
 
 		SetTilt(true);
-		// TODO : Start game here
+		canLink = true;
 	}
 
 	IEnumerator SpawnLayerAnim(int layerIndex)
 	{
-		foreach (Transform cellPoint in cellsLayers[layerIndex].cells)
+		foreach ((Transform cellPoint, Vector3Int gridPos) in cellsLayers[layerIndex].cells)
 		{
-			// TODO : I'll probably have to modify this once I get to the actual gameplay
 			yield return new WaitForSeconds(spawnCellDelay);
 
 			Cell cell = Instantiate(cellPrefab, cellPoint);
 			cell.transform.localPosition = Vector3.zero;
 
 			int colorIndex = Random.Range(0, cellColors.Length);
-			cell.Init(cellColors[colorIndex], colorIndex);
+			cell.Init(cellColors[colorIndex], colorIndex, gridPos, StartLink, HoverCell);
 		}
+	}
+
+	void StartLink(Cell cell)
+	{
+		if (!canLink)
+			return;
+
+		isLinking = true;
+		linkedCells.Add(cell);
+	}
+
+	void HoverCell(Cell cell)
+	{
+		if (!isLinking || linkedCells.Contains(cell))
+			return;
+
+		Cell lastCell = linkedCells[^1];
+		Vector3Int gridOffset = cell.gridPos - lastCell.gridPos;
+
+		if (cell.gridPos.z > 0)
+			return;
+
+		if ((gridOffset.x * gridOffset.x < 0 ? -1 : 1) <= 1 && (gridOffset.y * gridOffset.z < 0 ? -1 : 1) <= 1)
+			linkedCells.Add(cell);
+
+		// TODO : Add graphical links here
+	}
+
+	void FinishLink()
+	{
+		// clean link graphs
+
+		Debug.Log("Finished links");
+
+		if (linkedCells.Count < minLinkLength)
+		{
+			linkedCells.Clear();
+			return;
+		}
+
+		Vector3Int[] emptyGridPos = new Vector3Int[linkedCells.Count];
+
+		for (int i = 0; i < emptyGridPos.Length; i++)
+			emptyGridPos[i] = linkedCells[i].gridPos;
+
+		linkedCells.ForEach(cell => Destroy(cell.gameObject));
+		linkedCells.Clear();
+
+		// reduce turns
+		// get points
+
+		// move next cell in
+
+		linkedCells.Clear();
+		isLinking = false;
+	}
+
+	void MoveNextCellsIn(Vector3Int[] gridPos)
+	{
+		// TODO : How am I going to make this ?
 	}
 
 	public void StartGame()
 	{
-		// TODO : Add clear here
+		// TODO : Add clear cells here
 		StartCoroutine(ShowcaseAnim());
 	}
 
@@ -197,7 +269,7 @@ public class GridManager : MonoBehaviour
 	public class Layer
 	{
 		public Transform transform;
-		public List<Transform> cells;
+		public List<(Transform transform, Vector3Int gridPos)> cells;
 
 		public Vector3 normalOffset;
 		public Vector3 expandedOffset;
@@ -205,7 +277,7 @@ public class GridManager : MonoBehaviour
 		public Layer(Transform transform, float expandedDepth)
 		{
 			this.transform = transform;
-			cells = new List<Transform>();
+			cells = new List<(Transform transform, Vector3Int gridPos)>();
 
 			normalOffset = transform.localPosition;
 			expandedOffset = new Vector3(0, 0, expandedDepth);

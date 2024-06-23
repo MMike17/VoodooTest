@@ -81,11 +81,13 @@ public class InputManager : MonoBehaviour
 		return instance.deviceTilt;
 	}
 
+	public static bool GetPointerUp()
+	{
+		if (Application.isEditor)
+			return Input.GetMouseButtonUp(0);
+		else
+			return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended;
+	}
+
 	public void ResetTilt() => deviceTilt = Vector2.zero;
-
-	// what do we need here ?
-
-	// continuous press
-	// is released this frame
-	// is pressed this frame
 }
