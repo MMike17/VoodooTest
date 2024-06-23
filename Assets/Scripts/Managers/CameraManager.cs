@@ -17,6 +17,7 @@ public class CameraManager : MonoBehaviour
 	public Transform leftTarget;
 	public Transform rightTarget;
 
+	Action<float> ExpandGridLayers;
 	Action ResetTilt;
 	bool canTilt;
 
@@ -81,9 +82,10 @@ public class CameraManager : MonoBehaviour
 		}
 	}
 
-	public void Init(Action resetTilt)
+	public void Init(Action resetTilt, Action<float> expandGridLayers)
 	{
 		ResetTilt = resetTilt;
+		ExpandGridLayers = expandGridLayers;
 		SetCanTilt(false);
 	}
 
@@ -105,6 +107,9 @@ public class CameraManager : MonoBehaviour
 		(Vector3 pos, Vector3 dir) posAndDir = GetCameraPosAndDir(currentTilt);
 		mainCamera.transform.position = posAndDir.pos;
 		mainCamera.transform.forward = posAndDir.dir;
+
+		// I'm kind of violating the API here
+		ExpandGridLayers(currentTilt.magnitude);
 	}
 
 	(Vector3, Vector3) GetCameraPosAndDir(Vector2 currentTilt)

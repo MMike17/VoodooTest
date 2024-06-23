@@ -264,6 +264,11 @@ public class GridManager : MonoBehaviour
 		StartCoroutine(ShowcaseAnim());
 	}
 
+	public void ExpandLayers(float percent)
+	{
+		cellsLayers.ForEach(cell => cell.PositionLayer(Mathf.Clamp01(percent)));
+	}
+
 	///<summary>Represents a layer of the grid</summary>
 	[Serializable] // used for debug
 	public class Layer
