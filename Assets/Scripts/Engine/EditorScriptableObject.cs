@@ -8,6 +8,7 @@ public class EditorScriptableObject<T> : ScriptableObject where T : ScriptableOb
 
 	public static T Get()
 	{
+#if UNITY_EDITOR
 		if (instance == null)
 		{
 			string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
@@ -17,6 +18,7 @@ public class EditorScriptableObject<T> : ScriptableObject where T : ScriptableOb
 			else
 				instance = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guids[0]));
 		}
+#endif
 
 		return instance;
 	}

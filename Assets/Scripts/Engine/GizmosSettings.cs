@@ -5,8 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Gizmos/GizmosSettings")]
 public class GizmosSettings : EditorScriptableObject<GizmosSettings>
 {
+#if UNITY_EDITOR
 	[MenuItem("Tools/Select " + nameof(GizmosSettings))]
 	static void SelectSettings() => Selection.activeObject = Get();
+#endif
 
 	[Header(nameof(GridManager))]
 	public bool enableGrid;
