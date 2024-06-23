@@ -10,9 +10,13 @@ public class GameUIPanel : Panel
 
 	public void Init(Action OnOpenSettings, Action ResetTilt)
 	{
-		resetTiltButton.gameObject.SetActive(GameManager.save.tiltType == InputManager.TiltType.Gyroscope);
-
 		openSettingsButton.onClick.AddListener(() => OnOpenSettings());
 		resetTiltButton.onClick.AddListener(() => ResetTilt());
+	}
+
+	public override void Open()
+	{
+		resetTiltButton.gameObject.SetActive(GameManager.save.tiltType == InputManager.TiltType.Gyroscope);
+		base.Open();
 	}
 }

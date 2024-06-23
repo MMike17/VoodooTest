@@ -6,6 +6,6 @@ public abstract class Panel : MonoBehaviour
 	[Header("References")]
 	public Animator anim;
 
-	public void Open() => anim.Play("Open");
+	public virtual void Open() => anim.Play("Open");
 	public void Close() => anim.Play("Close");
 }
