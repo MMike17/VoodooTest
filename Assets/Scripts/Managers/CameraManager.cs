@@ -107,32 +107,31 @@ public class CameraManager : MonoBehaviour
 		mainCamera.transform.forward = posAndDir.dir;
 	}
 
-	// TODO : This gives weird values and is probably broken
 	(Vector3, Vector3) GetCameraPosAndDir(Vector2 currentTilt)
 	{
+		// no input
+		// if (currentTilt == Vector2.zero)
+		// 	return (centerTarget.position, centerTarget.forward);
+
 		// determine which side of the grid are we going towards
 		Transform xTarget = centerTarget;
 		Transform yTarget = centerTarget;
 
 		if (currentTilt.x > 0)
 			xTarget = rightTarget;
-		else
+		else if (currentTilt.x < 0)
 		{
 			currentTilt.x *= -1;
 			xTarget = leftTarget;
 		}
 
 		if (currentTilt.y > 0)
-			yTarget = upTarget;
-		else
+			yTarget = downTarget;
+		else if (currentTilt.y < 0)
 		{
 			currentTilt.y *= -1;
-			yTarget = downTarget;
+			yTarget = upTarget;
 		}
-
-		// no input
-		if (currentTilt == Vector2.zero)
-			return (centerTarget.position, centerTarget.forward);
 
 		Vector3 pos = Vector3.Lerp(
 			Vector3.Lerp(centerTarget.position, xTarget.position, currentTilt.x),

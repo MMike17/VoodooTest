@@ -586,8 +586,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f663f5fb3d24bcb4186334a457e1dae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minTiltMagnitude: 0.1
-  maxTiltMagnitude: 5
+  minTiltMagnitude: 0.5
+  maxTiltMagnitude: 10
   mainCamera: {fileID: 330585545}
   centerTarget: {fileID: 1001062627}
   upTarget: {fileID: 1985647475}
@@ -1371,7 +1371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1737878113, guid: c10182161a47c3042bb0fdc6e160ff02, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -403.1999
+      value: -403.201
       objectReference: {fileID: 0}
     - target: {fileID: 3389081749610830312, guid: c10182161a47c3042bb0fdc6e160ff02,
         type: 3}

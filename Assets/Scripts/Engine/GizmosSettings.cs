@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-// TODO : Add description here
+/// <summary>Centralized settings for Gizmos display</summary>
 [CreateAssetMenu(menuName = "Gizmos/GizmosSettings")]
 public class GizmosSettings : EditorScriptableObject<GizmosSettings>
 {

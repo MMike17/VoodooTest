@@ -20,9 +20,7 @@ public class GameManager : MonoBehaviour
 	{
 		DataManager.prettySave = prettySave;
 		save = DataManager.LoadData<Save>();
-
-		if (save == null)
-			save = new Save();
+		save ??= new Save();
 
 		InitManagers();
 	}
