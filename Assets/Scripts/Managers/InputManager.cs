@@ -21,10 +21,12 @@ public class InputManager : MonoBehaviour
 	}
 
 	Vector2 deviceTilt;
+	Vector2 deviceOffset;
 
 	public void Init()
 	{
 		instance = this;
+		ResetTilt();
 	}
 
 	public static Vector2 GetTilt()
@@ -62,11 +64,10 @@ public class InputManager : MonoBehaviour
 			switch (GameManager.save.tiltType)
 			{
 				case TiltType.Gyroscope:
-					// TODO : Do I need this ?
 					Input.gyro.enabled = true;
+					Vector2 currentRot = Input.gyro.rotationRate;
 
-					// I'm explicitely casting this to Vector2 to remember that I'm getting a Vector3
-					instance.deviceTilt = (Vector2)Input.gyro.attitude.eulerAngles;
+					instance.deviceTilt += new Vector2(currentRot.y, currentRot.x) * instance.mobileTiltSensitivity;
 					break;
 
 				case TiltType.Drag:
@@ -89,5 +90,11 @@ public class InputManager : MonoBehaviour
 			return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended;
 	}
 
-	public void ResetTilt() => deviceTilt = Vector2.zero;
+	public void ResetTilt()
+	{
+		deviceTilt = Vector2.zero;
+
+		if (GameManager.save.tiltType == TiltType.Gyroscope)
+			deviceOffset = Input.gyro.rotationRate;
+	}
 }

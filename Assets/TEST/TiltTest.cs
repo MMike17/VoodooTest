@@ -16,7 +16,8 @@ namespace TEST
 
 		void Awake()
 		{
-			GameManager.save = new Save();
+			// reactivate this to test
+			// GameManager.save = new Save();
 
 			inputManager.Init();
 			resetTilt.onClick.AddListener(() => inputManager.ResetTilt());
