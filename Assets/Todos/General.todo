@@ -1,4 +1,4 @@
 x Add editor resources scriptable object
+x Start game when we click play
 - Add haptics feedback (https://docs.unity3d.com/2021.3/Documentation/ScriptReference/Handheld.Vibrate.html)
 - Add sound manager
-- Start game when we click play

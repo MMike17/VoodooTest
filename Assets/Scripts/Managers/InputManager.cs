@@ -81,7 +81,6 @@ public class InputManager : MonoBehaviour
 		return instance.deviceTilt;
 	}
 
-	// TODO : Call this from the UI
 	public void ResetTilt() => deviceTilt = Vector2.zero;
 
 	// what do we need here ?

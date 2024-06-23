@@ -133,3 +133,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 505291591829607387}
+  rend: {fileID: 77996219993142232}

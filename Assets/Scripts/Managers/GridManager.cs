@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Random = UnityEngine.Random;
+
 /// <summary>Manages the grid of elements</summary>
 public class GridManager : MonoBehaviour
 {
@@ -10,6 +12,8 @@ public class GridManager : MonoBehaviour
 	public int gridSize;
 	public float cellSize;
 	public float cellSpacing;
+	[Space]
+	public Color[] cellColors;
 	[Space]
 	public int gridDepth;
 	public float layerSpacing;
@@ -80,7 +84,6 @@ public class GridManager : MonoBehaviour
 		SetTilt = setTilt;
 
 		GenerateGridLayers();
-		StartCoroutine(ShowcaseAnim());
 	}
 
 	void GenerateGridLayers()
@@ -174,8 +177,19 @@ public class GridManager : MonoBehaviour
 		{
 			// TODO : I'll probably have to modify this once I get to the actual gameplay
 			yield return new WaitForSeconds(spawnCellDelay);
-			Instantiate(cellPrefab, cellPoint).transform.localPosition = Vector3.zero;
+
+			Cell cell = Instantiate(cellPrefab, cellPoint);
+			cell.transform.localPosition = Vector3.zero;
+
+			int colorIndex = Random.Range(0, cellColors.Length);
+			cell.Init(cellColors[colorIndex], colorIndex);
 		}
+	}
+
+	public void StartGame()
+	{
+		// TODO : Add clear here
+		StartCoroutine(ShowcaseAnim());
 	}
 
 	///<summary>Represents a layer of the grid</summary>

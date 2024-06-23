@@ -23,18 +23,25 @@ public class PanelsManager : MonoBehaviour
 
 	PanelTag currentPanel;
 
-	public void Init(Action ResetTilt)
+	public void Init(Action ResetTilt, Action OnPlay)
 	{
 		gamePanels.ForEach(item =>
 		{
 			switch (item.panel)
 			{
 				case MainMenuPanel mainMenu:
-					mainMenu.Init(() => PopPanel(PanelTag.GameUI));
+					mainMenu.Init(() =>
+					{
+						PopPanel(PanelTag.GameUI);
+						OnPlay();
+					});
 					break;
 
 				case GameUIPanel gameUI:
-					gameUI.Init(() => PopPanel(PanelTag.Settings), ResetTilt);
+					gameUI.Init(
+						() => PopPanel(PanelTag.Settings),
+						ResetTilt
+					);
 					break;
 
 				case SettingsPanel settings:

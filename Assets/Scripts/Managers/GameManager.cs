@@ -31,7 +31,10 @@ public class GameManager : MonoBehaviour
 	{
 		inputManager.Init();
 		cameraManager.Init(inputManager.ResetTilt);
-		panelsManager.Init(inputManager.ResetTilt);
+		panelsManager.Init(
+			inputManager.ResetTilt,
+			gridManager.StartGame
+		);
 		gridManager.Init(cameraManager.SetCanTilt);
 	}
 
