@@ -51,8 +51,10 @@ public class GridManager : MonoBehaviour
 	List<Cell> linkedCells;
 	List<Requirement> requiredColors;
 	Action<List<Requirement>, Color[]> DisplayRequirements;
+	Action<Cell> AddCellUI;
 	Action<int> SetTurn;
 	Action<bool> SetTilt;
+	Action ClearCellsUI;
 	Action OnGameOver;
 	Action OnWin;
 	int selectedColorIndex;
@@ -107,6 +109,8 @@ public class GridManager : MonoBehaviour
 		Action<bool> setTilt,
 		Action<int> setTurn,
 		Action<List<Requirement>, Color[]> displayRequirements,
+		Action<Cell> addCellUI,
+		Action clearCellsUI,
 		Action onGameOver,
 		Action onWin
 	)
@@ -114,6 +118,8 @@ public class GridManager : MonoBehaviour
 		SetTilt = setTilt;
 		SetTurn = setTurn;
 		DisplayRequirements = displayRequirements;
+		AddCellUI = addCellUI;
+		ClearCellsUI = clearCellsUI;
 		OnGameOver = onGameOver;
 		OnWin = onWin;
 		linkedCells = new List<Cell>();
@@ -236,6 +242,7 @@ public class GridManager : MonoBehaviour
 		linkedCells.Add(cell);
 
 		selectedColorIndex = cell.colorIndex;
+		AddCellUI(cell);
 	}
 
 	void HoverCell(Cell cell)
@@ -250,16 +257,16 @@ public class GridManager : MonoBehaviour
 			return;
 
 		if ((gridOffset.x * (gridOffset.x < 0 ? -1 : 1)) <= 1 && (gridOffset.y * (gridOffset.y < 0 ? -1 : 1)) <= 1)
+		{
 			linkedCells.Add(cell);
-
-		// TODO : Add graphical links here
+			AddCellUI(cell);
+		}
 	}
 
 	void FinishLink()
 	{
 		isLinking = false;
-
-		// clean link graphs
+		ClearCellsUI();
 
 		if (linkedCells.Count >= minLinkLength)
 		{

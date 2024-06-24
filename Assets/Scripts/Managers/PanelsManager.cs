@@ -25,7 +25,7 @@ public class PanelsManager : MonoBehaviour
 
 	PanelTag currentPanel;
 
-	public void Init(Action ResetTilt, Action OnPlay)
+	public void Init(Action ResetTilt, Action OnPlay, Func<Vector3, Vector3> GetUIPos)
 	{
 		gamePanels.ForEach(item =>
 		{
@@ -42,7 +42,8 @@ public class PanelsManager : MonoBehaviour
 				case GameUIPanel gameUI:
 					gameUI.Init(
 						() => PopPanel(PanelTag.Settings),
-						ResetTilt
+						ResetTilt,
+						GetUIPos
 					);
 					break;
 

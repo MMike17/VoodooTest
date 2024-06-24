@@ -65,7 +65,7 @@ public class InputManager : MonoBehaviour
 			{
 				case TiltType.Gyroscope:
 					Input.gyro.enabled = true;
-					Vector2 currentRot = Input.gyro.rotationRate;
+					Vector2 currentRot = Input.gyro.rotationRate; // consider this an unwrapped version of eulerAngles
 
 					instance.deviceTilt += new Vector2(currentRot.y, currentRot.x) * instance.mobileTiltSensitivity;
 					break;
@@ -93,8 +93,5 @@ public class InputManager : MonoBehaviour
 	public void ResetTilt()
 	{
 		deviceTilt = Vector2.zero;
-
-		if (GameManager.save.tiltType == TiltType.Gyroscope)
-			deviceOffset = Input.gyro.rotationRate;
 	}
 }

@@ -12,10 +12,11 @@ public class Cell : MonoBehaviour
 	public Renderer rend;
 	public EventTrigger eventTrigger;
 
+	[Header("Debug")]
+	public Vector3Int debug_gridPos;
+
 	public int colorIndex { get; private set; }
 	public Vector3Int gridPos { get; private set; }
-
-	public Vector3Int debug_gridPos;
 
 	public void Init(
 		Color color,

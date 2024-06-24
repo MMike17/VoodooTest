@@ -34,12 +34,15 @@ public class GameManager : MonoBehaviour
 		);
 		panelsManager.Init(
 			inputManager.ResetTilt,
-			gridManager.StartGame
+			gridManager.StartGame,
+			cameraManager.GetUIPos
 		);
 		gridManager.Init(
 			cameraManager.SetCanTilt,
 			panelsManager.gameUI.UpdateTurns,
 			panelsManager.gameUI.DisplayRequirements,
+			panelsManager.gameUI.AddCell,
+			panelsManager.gameUI.ClearCells,
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win)
 		);

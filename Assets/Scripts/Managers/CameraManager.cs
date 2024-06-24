@@ -159,4 +159,6 @@ public class CameraManager : MonoBehaviour
 		canTilt = state;
 		ResetTilt();
 	}
+
+	public Vector3 GetUIPos(Vector3 position) => mainCamera.WorldToScreenPoint(position);
 }

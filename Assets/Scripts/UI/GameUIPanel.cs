@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using static GridManager;
+using static UnityEngine.RectTransform;
 
 public class GameUIPanel : Panel
 {
@@ -29,9 +30,11 @@ public class GameUIPanel : Panel
 	List<RectTransform> nodePool;
 	List<RectTransform> links;
 	List<RectTransform> linkPool;
+	Func<Vector3, Vector3> GetUIPos;
 
-	public void Init(Action OnOpenSettings, Action ResetTilt)
+	public void Init(Action OnOpenSettings, Action ResetTilt, Func<Vector3, Vector3> getUIPos)
 	{
+		GetUIPos = getUIPos;
 		selectedCells = new List<Cell>();
 
 		nodes = new List<RectTransform>();
@@ -56,6 +59,29 @@ public class GameUIPanel : Panel
 	{
 		resetTiltButton.gameObject.SetActive(GameManager.save.tiltType == InputManager.TiltType.Gyroscope);
 		base.Open();
+	}
+
+	void Update()
+	{
+		for (int i = 0; i < selectedCells.Count; i++)
+		{
+			RectTransform current = nodes[i];
+			current.position = GetUIPos(selectedCells[i].transform.position);
+
+			if (i > 0)
+			{
+				RectTransform previous = nodes[i - 1];
+				RectTransform link = links[i - 1]; // yes I know this feels weird
+
+				link.position = Vector3.Lerp(current.position, previous.position, 0.5f);
+				link.rotation = Quaternion.Euler(0, 0, Vector3.SignedAngle(
+					Vector3.right,
+					previous.position - current.position,
+					Vector3.forward
+				));
+				link.SetSizeWithCurrentAnchors(Axis.Horizontal, Vector3.Distance(current.position, previous.position));
+			}
+		}
 	}
 
 	public void UpdateTurns(int turns)
@@ -94,10 +120,53 @@ public class GameUIPanel : Panel
 	public void AddCell(Cell cell)
 	{
 		selectedCells.Add(cell);
+		RectTransform node = null;
+
+		if (nodePool.Count > 0)
+		{
+			node = nodePool[0];
+			node.gameObject.SetActive(true);
+			nodePool.Remove(node);
+		}
+		else
+			node = Instantiate(nodePrefab, linksHolder);
+
+		nodes.Add(node);
+
+		if (selectedCells.Count > 1)
+		{
+			RectTransform link = null;
+
+			if (linkPool.Count > 0)
+			{
+				link = linkPool[0];
+				link.gameObject.SetActive(true);
+				linkPool.Remove(link);
+			}
+			else
+				link = Instantiate(linkPrefab, linksHolder);
+
+			links.Add(link);
+		}
+
+		nodes.ForEach(item => item.SetAsLastSibling());
 	}
 
-	public void RemoveCell(Cell cell)
+	public void ClearCells()
 	{
-		//
+		nodes.ForEach(item =>
+		{
+			item.gameObject.SetActive(false);
+			nodePool.Add(item);
+		});
+		links.ForEach(item =>
+		{
+			item.gameObject.SetActive(false);
+			linkPool.Add(item);
+		});
+
+		nodes.Clear();
+		links.Clear();
+		selectedCells.Clear();
 	}
 }
