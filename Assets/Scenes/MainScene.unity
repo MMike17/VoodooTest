@@ -257,6 +257,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  minTurn: 5
+  maxTurn: 10
   showcaseTarget: {fileID: 2074396723}
   gameplayTarget: {fileID: 994359405}
   cellPrefab: {fileID: 77996219993142238, guid: 7c29fef4c3e0e274599372e093fdc30a,

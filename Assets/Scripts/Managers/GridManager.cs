@@ -30,6 +30,9 @@ public class GridManager : MonoBehaviour
 	[Space]
 	public float elementForwardDuration;
 	public AnimationCurve elementForwardCurve;
+	[Space]
+	public int minTurn;
+	public int maxTurn;
 
 	[Header("References")]
 	public Transform showcaseTarget;
@@ -38,8 +41,12 @@ public class GridManager : MonoBehaviour
 	public Cell cellPrefab;
 
 	List<Layer> cellsLayers;
-	Action<bool> SetTilt;
 	List<Cell> linkedCells;
+	Action<int> SetTurn;
+	Action<bool> SetTilt;
+	Action OnGameOver;
+	Action OnWin;
+	int currentTurn;
 	bool canLink;
 	bool isLinking;
 
@@ -86,9 +93,12 @@ public class GridManager : MonoBehaviour
 		}
 	}
 
-	public void Init(Action<bool> setTilt)
+	public void Init(Action<bool> setTilt, Action<int> setTurn, Action onGameOver, Action onWin)
 	{
 		SetTilt = setTilt;
+		SetTurn = setTurn;
+		OnGameOver = onGameOver;
+		OnWin = onWin;
 		linkedCells = new List<Cell>();
 		canLink = false;
 		isLinking = false;
@@ -243,7 +253,9 @@ public class GridManager : MonoBehaviour
 			linkedCells.ForEach(cell => Destroy(cell.gameObject));
 			linkedCells.Clear();
 
-			// reduce turns
+			currentTurn--;
+			SetTurn(currentTurn);
+
 			// get points
 
 			MoveNextCellsIn(emptyGridPos);
@@ -273,8 +285,7 @@ public class GridManager : MonoBehaviour
 					movingCells.Add(cell);
 				}
 				else
-					break; // we don't need to loop any further
-						   // TODO : Check if this also breaks the foreach
+					break; // we don't need to loop any further (subsequent cells are empty)
 			}
 		}
 
@@ -301,12 +312,19 @@ public class GridManager : MonoBehaviour
 			cell.ForwardAnim();
 		});
 
-		canLink = true;
+		if (currentTurn == 0)
+			OnGameOver();
+		else
+			canLink = true;
 	}
 
 	public void StartGame()
 	{
 		// TODO : Add clear cells here
+
+		currentTurn = Random.Range(minTurn, maxTurn);
+		SetTurn(currentTurn);
+
 		StartCoroutine(ShowcaseAnim());
 	}
 

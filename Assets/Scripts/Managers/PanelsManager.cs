@@ -11,6 +11,8 @@ public class PanelsManager : MonoBehaviour
 	[Header("Debug")]
 	public PanelTag currentPanel_debug;
 
+	public GameUIPanel gameUI => gamePanels.Find(item => item.tag == PanelTag.GameUI).panel as GameUIPanel;
+
 	public enum PanelTag
 	{
 		NONE,

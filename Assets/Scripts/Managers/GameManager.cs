@@ -36,7 +36,12 @@ public class GameManager : MonoBehaviour
 			inputManager.ResetTilt,
 			gridManager.StartGame
 		);
-		gridManager.Init(cameraManager.SetCanTilt);
+		gridManager.Init(
+			cameraManager.SetCanTilt,
+			panelsManager.gameUI.UpdateTurns,
+			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
+			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win)
+		);
 	}
 
 	public static void SaveData() => DataManager.SaveData(save);
