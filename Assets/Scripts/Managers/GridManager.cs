@@ -33,6 +33,13 @@ public class GridManager : MonoBehaviour
 	[Space]
 	public int minTurn;
 	public int maxTurn;
+	[Space]
+	public int minRequirements;
+	public int maxRequirements;
+	public int minRequirementAmount;
+	public int maxRequirementAmount;
+
+	// TODO : Move most of the game design settings to a separate scriptable object
 
 	[Header("References")]
 	public Transform showcaseTarget;
@@ -42,10 +49,13 @@ public class GridManager : MonoBehaviour
 
 	List<Layer> cellsLayers;
 	List<Cell> linkedCells;
+	List<Requirement> requiredColors;
+	Action<List<Requirement>, Color[]> DisplayRequirements;
 	Action<int> SetTurn;
 	Action<bool> SetTilt;
 	Action OnGameOver;
 	Action OnWin;
+	int selectedColorIndex;
 	int currentTurn;
 	bool canLink;
 	bool isLinking;
@@ -93,10 +103,17 @@ public class GridManager : MonoBehaviour
 		}
 	}
 
-	public void Init(Action<bool> setTilt, Action<int> setTurn, Action onGameOver, Action onWin)
+	public void Init(
+		Action<bool> setTilt,
+		Action<int> setTurn,
+		Action<List<Requirement>, Color[]> displayRequirements,
+		Action onGameOver,
+		Action onWin
+	)
 	{
 		SetTilt = setTilt;
 		SetTurn = setTurn;
+		DisplayRequirements = displayRequirements;
 		OnGameOver = onGameOver;
 		OnWin = onWin;
 		linkedCells = new List<Cell>();
@@ -217,11 +234,13 @@ public class GridManager : MonoBehaviour
 
 		isLinking = true;
 		linkedCells.Add(cell);
+
+		selectedColorIndex = cell.colorIndex;
 	}
 
 	void HoverCell(Cell cell)
 	{
-		if (!isLinking || linkedCells.Contains(cell))
+		if (!isLinking || linkedCells.Contains(cell) || cell.colorIndex != selectedColorIndex)
 			return;
 
 		Cell lastCell = linkedCells[^1];
@@ -230,7 +249,7 @@ public class GridManager : MonoBehaviour
 		if (cell.gridPos.z > 0)
 			return;
 
-		if ((gridOffset.x * gridOffset.x < 0 ? -1 : 1) <= 1 && (gridOffset.y * gridOffset.z < 0 ? -1 : 1) <= 1)
+		if ((gridOffset.x * (gridOffset.x < 0 ? -1 : 1)) <= 1 && (gridOffset.y * (gridOffset.y < 0 ? -1 : 1)) <= 1)
 			linkedCells.Add(cell);
 
 		// TODO : Add graphical links here
@@ -238,13 +257,19 @@ public class GridManager : MonoBehaviour
 
 	void FinishLink()
 	{
-		canLink = false;
 		isLinking = false;
 
 		// clean link graphs
 
 		if (linkedCells.Count >= minLinkLength)
 		{
+			// requirements
+			requiredColors.FindAll(item => item.index == -1 || item.index == selectedColorIndex)
+				.ForEach(requirement => requirement.count -= linkedCells.Count);
+
+			DisplayRequirements(requiredColors, cellColors);
+
+			// destroy cells
 			Vector3Int[] emptyGridPos = new Vector3Int[linkedCells.Count];
 
 			for (int i = 0; i < emptyGridPos.Length; i++)
@@ -253,6 +278,7 @@ public class GridManager : MonoBehaviour
 			linkedCells.ForEach(cell => Destroy(cell.gameObject));
 			linkedCells.Clear();
 
+			// turns
 			currentTurn--;
 			SetTurn(currentTurn);
 
@@ -289,6 +315,7 @@ public class GridManager : MonoBehaviour
 			}
 		}
 
+		canLink = false;
 		StartCoroutine(MoveCellsAnim(movingCells));
 	}
 
@@ -322,8 +349,31 @@ public class GridManager : MonoBehaviour
 	{
 		// TODO : Add clear cells here
 
+		// turns
 		currentTurn = Random.Range(minTurn, maxTurn);
 		SetTurn(currentTurn);
+
+		// requirements
+		List<int> possibleColors = new List<int>();
+
+		while (possibleColors.Count < cellColors.Length)
+			possibleColors.Add(possibleColors.Count);
+
+		possibleColors.Add(-1);
+		requiredColors = new List<Requirement>();
+		int requirementCount = Random.Range(minRequirements, maxRequirements);
+
+		while (requirementCount > 0)
+		{
+			int index = possibleColors[Random.Range(0, possibleColors.Count)];
+
+			possibleColors.Remove(index);
+			requiredColors.Add(new Requirement(index, Random.Range(minRequirementAmount, maxRequirementAmount)));
+
+			requirementCount--;
+		}
+
+		DisplayRequirements(requiredColors, cellColors);
 
 		StartCoroutine(ShowcaseAnim());
 	}
@@ -355,6 +405,19 @@ public class GridManager : MonoBehaviour
 		public void PositionLayer(float expandAmount)
 		{
 			transform.localPosition = Vector3.Lerp(normalOffset, expandedOffset, expandAmount);
+		}
+	}
+
+	[Serializable] // used for debug
+	public class Requirement
+	{
+		public int index;
+		public int count;
+
+		public Requirement(int index, int count)
+		{
+			this.index = index;
+			this.count = count;
 		}
 	}
 }

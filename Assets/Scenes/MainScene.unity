@@ -177,7 +177,7 @@ MonoBehaviour:
   - {r: 0, g: 0.75025225, b: 1, a: 1}
   - {r: 1, g: 0, b: 0.48802376, a: 1}
   - {r: 0, g: 1, b: 0.66232514, a: 1}
-  gridDepth: 5
+  gridDepth: 8
   layerSpacing: 1
   expandedSpacing: 4
   expandingCurve:
@@ -257,8 +257,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  minTurn: 5
-  maxTurn: 10
+  minTurn: 10
+  maxTurn: 30
+  minRequirements: 1
+  maxRequirements: 3
+  minRequirementAmount: 5
+  maxRequirementAmount: 10
   showcaseTarget: {fileID: 2074396723}
   gameplayTarget: {fileID: 994359405}
   cellPrefab: {fileID: 77996219993142238, guid: 7c29fef4c3e0e274599372e093fdc30a,
@@ -1047,7 +1051,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2074396722}
   m_LocalRotation: {x: 0.12607859, y: -0.2566048, z: 0.03378265, w: 0.9576622}
-  m_LocalPosition: {x: 3, y: 1, z: 10}
+  m_LocalPosition: {x: 3.5, y: 1, z: 12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

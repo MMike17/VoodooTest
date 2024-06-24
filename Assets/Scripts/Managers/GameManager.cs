@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
 		gridManager.Init(
 			cameraManager.SetCanTilt,
 			panelsManager.gameUI.UpdateTurns,
+			panelsManager.gameUI.DisplayRequirements,
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win)
 		);
