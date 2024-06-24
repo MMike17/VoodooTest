@@ -108,14 +108,13 @@ public class GridManager : MonoBehaviour
 			layerTransform.SetParent(transform);
 
 			// we want the closest (current) layer to be at the pivot of the holder
-			float lastLayerZ = cellSize * gridDepth + layerSpacing * (gridDepth - 1);
-			float totalLayerSpacing = cellSize + layerSpacing;
-			float lastExpandSpacing = expandedSpacing * gridDepth;
+			float normalLayerSpacing = cellSize + layerSpacing;
+			float expandedLayerSpacing = cellSize + expandedSpacing;
 
-			layerTransform.localPosition = new Vector3(0, 0, lastLayerZ - totalLayerSpacing * i);
-			cellsLayers.Add(new Layer(layerTransform, lastExpandSpacing - expandedSpacing * i));
+			layerTransform.localPosition = new Vector3(0, 0, normalLayerSpacing * i);
+			cellsLayers.Add(new Layer(layerTransform, expandedLayerSpacing * i));
 
-			GenerateGridCells(cellsLayers[i], (gridDepth - 1) - i);
+			GenerateGridCells(cellsLayers[i], i);
 		}
 	}
 
@@ -154,14 +153,14 @@ public class GridManager : MonoBehaviour
 		transform.SetPositionAndRotation(showcaseTarget.position, showcaseTarget.rotation);
 		cellsLayers.ForEach(layer => layer.PositionLayer(1));
 
-		int layerIndex = 0;
-		while (layerIndex < cellsLayers.Count)
+		int layerIndex = cellsLayers.Count - 1;
+		while (layerIndex >= 0)
 		{
 			// we shoot and forget to have simultaneous layer generation
 			StartCoroutine(SpawnLayerAnim(layerIndex));
 			yield return new WaitForSeconds(spawnLayerDelay);
 
-			layerIndex++;
+			layerIndex--;
 		}
 
 		yield return new WaitForSeconds(showcaseEndDelay);
@@ -203,7 +202,7 @@ public class GridManager : MonoBehaviour
 
 	void StartLink(Cell cell)
 	{
-		if (!canLink)
+		if (!canLink || isLinking)
 			return;
 
 		isLinking = true;
@@ -229,52 +228,80 @@ public class GridManager : MonoBehaviour
 
 	void FinishLink()
 	{
+		canLink = false;
+		isLinking = false;
+
 		// clean link graphs
 
-		Debug.Log("Finished links");
-
-		if (linkedCells.Count < minLinkLength)
+		if (linkedCells.Count >= minLinkLength)
 		{
+			Vector3Int[] emptyGridPos = new Vector3Int[linkedCells.Count];
+
+			for (int i = 0; i < emptyGridPos.Length; i++)
+				emptyGridPos[i] = linkedCells[i].gridPos;
+
+			linkedCells.ForEach(cell => Destroy(cell.gameObject));
 			linkedCells.Clear();
-			return;
+
+			// reduce turns
+			// get points
+
+			MoveNextCellsIn(emptyGridPos);
 		}
 
-		Vector3Int[] emptyGridPos = new Vector3Int[linkedCells.Count];
-
-		for (int i = 0; i < emptyGridPos.Length; i++)
-			emptyGridPos[i] = linkedCells[i].gridPos;
-
-		linkedCells.ForEach(cell => Destroy(cell.gameObject));
 		linkedCells.Clear();
-
-		// reduce turns
-		// get points
-
-		// move next cell in
-
-		linkedCells.Clear();
-		isLinking = false;
 	}
 
 	void MoveNextCellsIn(Vector3Int[] gridPos)
 	{
-		// TODO : How am I going to make this ?
+		List<Cell> movingCells = new List<Cell>();
 
-		// loop through all pos of deleted elements
-		// loop through all layers
-		// get element at x/y coord in this layer if there is one
-		// parent it to cell at same coord in previous layer
-		// send cell to anim routine
+		// we only loop through the cells we need
+		foreach (Vector3Int pos in gridPos)
+		{
+			// select all cells at the same coord with higher depth
+			for (int i = pos.z + 1; i < cellsLayers.Count; i++)
+			{
+				// it's faster to get the index arithmetically
+				int cellIndex = pos.x + pos.y * gridSize;
+				Cell cell = cellsLayers[i].cells[cellIndex].transform.GetComponentInChildren<Cell>();
 
-		// elementForwardDuration
-		// elementForwardCurve
+				if (cell != null)
+				{
+					// i should never be equal to 0 since pos.z can't be < 0
+					cell.transform.SetParent(cellsLayers[i - 1].cells[cellIndex].transform);
+					movingCells.Add(cell);
+				}
+				else
+					break; // we don't need to loop any further
+						   // TODO : Check if this also breaks the foreach
+			}
+		}
 
-		// MoveCellsAnim()
+		StartCoroutine(MoveCellsAnim(movingCells));
 	}
 
-	IEnumerator MoveCellsAnim()
+	IEnumerator MoveCellsAnim(List<Cell> cells)
 	{
-		yield return null;
+		Vector3 initialCellPos = cells[0].transform.localPosition;
+		float timer = 0;
+
+		while (timer < elementForwardDuration)
+		{
+			timer += Time.deltaTime;
+			float percent = elementForwardCurve.Evaluate(timer / elementForwardDuration);
+
+			cells.ForEach(cell => cell.transform.localPosition = Vector3.Lerp(initialCellPos, Vector3.zero, percent));
+			yield return null;
+		}
+
+		cells.ForEach(cell =>
+		{
+			cell.transform.localPosition = Vector3.zero;
+			cell.ForwardAnim();
+		});
+
+		canLink = true;
 	}
 
 	public void StartGame()

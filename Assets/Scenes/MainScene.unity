@@ -232,6 +232,31 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  elementForwardDuration: 0.5
+  elementForwardCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   showcaseTarget: {fileID: 2074396723}
   gameplayTarget: {fileID: 994359405}
   cellPrefab: {fileID: 77996219993142238, guid: 7c29fef4c3e0e274599372e093fdc30a,
@@ -586,7 +611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f663f5fb3d24bcb4186334a457e1dae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minTiltMagnitude: 0.5
+  minTiltMagnitude: 1
   maxTiltMagnitude: 10
   mainCamera: {fileID: 330585545}
   centerTarget: {fileID: 1001062627}
@@ -618,7 +643,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 994359404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.01}
+  m_LocalPosition: {x: 0, y: 0, z: 2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1019,14 +1044,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2074396722}
-  m_LocalRotation: {x: 0.12424642, y: -0.3038213, z: 0.03999882, w: 0.9437455}
-  m_LocalPosition: {x: 4.5, y: 1, z: 7}
+  m_LocalRotation: {x: 0.12607859, y: -0.2566048, z: 0.03378265, w: 0.9576622}
+  m_LocalPosition: {x: 3, y: 1, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 15, y: -35.69, z: 0}
+  m_LocalEulerAnglesHint: {x: 15, y: -30, z: 0}
 --- !u!224 &2081241517 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1099244537360219224, guid: 2ae05c532e04cd444a27f9309c793153,
