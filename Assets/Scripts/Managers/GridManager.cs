@@ -27,6 +27,9 @@ public class GridManager : MonoBehaviour
 	[Space]
 	public float toGameplayDuration;
 	public AnimationCurve toGameplayCurve;
+	[Space]
+	public float elementForwardDuration;
+	public AnimationCurve elementForwardCurve;
 
 	[Header("References")]
 	public Transform showcaseTarget;
@@ -256,6 +259,22 @@ public class GridManager : MonoBehaviour
 	void MoveNextCellsIn(Vector3Int[] gridPos)
 	{
 		// TODO : How am I going to make this ?
+
+		// loop through all pos of deleted elements
+		// loop through all layers
+		// get element at x/y coord in this layer if there is one
+		// parent it to cell at same coord in previous layer
+		// send cell to anim routine
+
+		// elementForwardDuration
+		// elementForwardCurve
+
+		// MoveCellsAnim()
+	}
+
+	IEnumerator MoveCellsAnim()
+	{
+		yield return null;
 	}
 
 	public void StartGame()
@@ -288,7 +307,6 @@ public class GridManager : MonoBehaviour
 			expandedOffset = new Vector3(0, 0, expandedDepth);
 		}
 
-		// TODO : Call this when we tilt the phone
 		public void PositionLayer(float expandAmount)
 		{
 			transform.localPosition = Vector3.Lerp(normalOffset, expandedOffset, expandAmount);
