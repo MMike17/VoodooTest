@@ -11,10 +11,11 @@ public class GameManager : MonoBehaviour
 	public bool prettySave;
 
 	[Header("Managers")]
+	public InputManager inputManager;
+	public AudioManager audioManager;
 	public CameraManager cameraManager;
 	public PanelsManager panelsManager;
 	public GridManager gridManager;
-	public InputManager inputManager;
 
 	void Awake()
 	{
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
 	void InitManagers()
 	{
 		inputManager.Init();
+		audioManager.Init();
 
 		cameraManager.Init(
 			inputManager.ResetTilt,
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
 			panelsManager.gameUI.DisplayRequirements,
 			panelsManager.gameUI.AddCell,
 			panelsManager.gameUI.FinishLink,
+			audioManager.PlaySound,
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win)
 		);

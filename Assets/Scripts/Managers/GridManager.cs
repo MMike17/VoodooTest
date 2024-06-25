@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using static AudioManager;
 using static RequirementTicket;
 using Random = UnityEngine.Random;
 
@@ -54,6 +55,7 @@ public class GridManager : MonoBehaviour
 	Action<List<Requirement>, Color[]> DisplayRequirements;
 	Action<Cell> AddCellUI;
 	Action<int, int> FinishLineUI;
+	Action<SoundTag> PlaySound;
 	Action<int> SetTurn;
 	Action<bool> SetTilt;
 	Action OnGameOver;
@@ -113,6 +115,7 @@ public class GridManager : MonoBehaviour
 		Action<List<Requirement>, Color[]> displayRequirements,
 		Action<Cell> addCellUI,
 		Action<int, int> finishLineUI,
+		Action<SoundTag> playSound,
 		Action onGameOver,
 		Action onWin
 	)
@@ -122,6 +125,7 @@ public class GridManager : MonoBehaviour
 		DisplayRequirements = displayRequirements;
 		AddCellUI = addCellUI;
 		FinishLineUI = finishLineUI;
+		PlaySound = playSound;
 		OnGameOver = onGameOver;
 		OnWin = onWin;
 		linkedCells = new List<Cell>();
@@ -309,6 +313,7 @@ public class GridManager : MonoBehaviour
 				canGameOver = false;
 			}
 
+			PlaySound(SoundTag.Element_Destruction);
 			MoveNextCellsIn(emptyGridPos, canGameOver);
 		}
 
