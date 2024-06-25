@@ -53,13 +53,14 @@ public class GridManager : MonoBehaviour
 	List<Requirement> requiredColors;
 	Action<List<Requirement>, Color[]> DisplayRequirements;
 	Action<Cell> AddCellUI;
+	Action<int, int> FinishLineUI;
 	Action<int> SetTurn;
 	Action<bool> SetTilt;
-	Action ClearCellsUI;
 	Action OnGameOver;
 	Action OnWin;
-	int selectedColorIndex;
 	(int total, int current) turns;
+	int selectedColorIndex;
+	int starsCount;
 	bool canLink;
 	bool isLinking;
 
@@ -111,7 +112,7 @@ public class GridManager : MonoBehaviour
 		Action<int> setTurn,
 		Action<List<Requirement>, Color[]> displayRequirements,
 		Action<Cell> addCellUI,
-		Action clearCellsUI,
+		Action<int, int> finishLineUI,
 		Action onGameOver,
 		Action onWin
 	)
@@ -120,7 +121,7 @@ public class GridManager : MonoBehaviour
 		SetTurn = setTurn;
 		DisplayRequirements = displayRequirements;
 		AddCellUI = addCellUI;
-		ClearCellsUI = clearCellsUI;
+		FinishLineUI = finishLineUI;
 		OnGameOver = onGameOver;
 		OnWin = onWin;
 		linkedCells = new List<Cell>();
@@ -269,7 +270,13 @@ public class GridManager : MonoBehaviour
 	void FinishLink()
 	{
 		isLinking = false;
-		ClearCellsUI();
+
+		// stars
+		int rewardStars = Mathf.Max(linkedCells.Count - minLinkLength, 0);
+		starsCount += rewardStars;
+
+		// clear ui & display stars
+		FinishLineUI(starsCount, rewardStars);
 
 		if (linkedCells.Count >= minLinkLength)
 		{
@@ -291,8 +298,6 @@ public class GridManager : MonoBehaviour
 			// turns
 			turns.current--;
 			SetTurn(turns.current);
-
-			// get points
 
 			bool canGameOver = true;
 
@@ -365,6 +370,8 @@ public class GridManager : MonoBehaviour
 
 	public void StartGame(bool isRestart)
 	{
+		starsCount = 0;
+
 		// clear cells
 		cellsLayers.ForEach(layer => layer.cells.ForEach(cell =>
 		{
@@ -417,11 +424,7 @@ public class GridManager : MonoBehaviour
 
 	public (Color[], List<Requirement>) GetCurrentRequirements() => (cellColors, requiredColors);
 
-	public int GetStars()
-	{
-		// TODO : Finish this
-		return Random.Range(1, 30);
-	}
+	public int GetStars() => starsCount;
 
 	///<summary>Represents a layer of the grid</summary>
 	[Serializable] // used for debug

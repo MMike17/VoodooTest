@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 			panelsManager.gameUI.UpdateTurns,
 			panelsManager.gameUI.DisplayRequirements,
 			panelsManager.gameUI.AddCell,
-			panelsManager.gameUI.ClearCells,
+			panelsManager.gameUI.FinishLink,
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win)
 		);

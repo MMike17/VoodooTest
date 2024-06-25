@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,11 +7,14 @@ using UnityEngine.UI;
 
 using static RequirementTicket;
 using static UnityEngine.RectTransform;
+using Random = UnityEngine.Random;
 
 public class GameUIPanel : Panel
 {
 	[Header("Settings")]
 	public int prewarmPoolSize;
+	[Space]
+	public float starParticleSpeed;
 
 	[Header("References")]
 	public Button openSettingsButton;
@@ -20,6 +24,10 @@ public class GameUIPanel : Panel
 	[Space]
 	public RequirementTicket requirementPrefab;
 	public Transform requirementList;
+	[Space]
+	public TMP_Text starsCounter;
+	public RectTransform starPrefab;
+	public RectTransform starHolder;
 	[Space]
 	public Transform linksHolder;
 	public RectTransform nodePrefab;
@@ -57,7 +65,9 @@ public class GameUIPanel : Panel
 
 	public override void Open()
 	{
+		starsCounter.text = "0";
 		resetTiltButton.gameObject.SetActive(GameManager.save.tiltType == InputManager.TiltType.Gyroscope);
+
 		base.Open();
 	}
 
@@ -84,10 +94,63 @@ public class GameUIPanel : Panel
 		}
 	}
 
-	public void UpdateTurns(int turns)
+	IEnumerator AnimateStars(Vector3 spawnPos, int totalStarsCount, int addStarsCount)
 	{
-		turnsCount.text = turns.ToString();
+		// TODO : Pool stars
+		List<RectTransform> flyingStars = new List<RectTransform>();
+		float distance = Vector3.Distance(spawnPos, starsCounter.transform.position);
+		float starDuration = distance / starParticleSpeed / 2; // next star will spawn when current is 1/2 of distance
+		float timer = starDuration;
+		int currentStarCounter = totalStarsCount - addStarsCount;
+
+		while (currentStarCounter != totalStarsCount)
+		{
+			timer += Time.deltaTime;
+
+			while (timer >= starDuration && addStarsCount > 0)
+			{
+				timer -= starDuration;
+
+				flyingStars.Add(Instantiate(starPrefab, starHolder));
+				flyingStars[^1].rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+
+				addStarsCount--;
+			}
+
+			List<RectTransform> toDelete = new List<RectTransform>();
+			flyingStars.ForEach(star =>
+			{
+				star.position = Vector3.MoveTowards(
+					star.position,
+					starsCounter.transform.position,
+					starParticleSpeed * Time.deltaTime
+				);
+				star.rotation = Quaternion.RotateTowards(
+					star.rotation,
+					Quaternion.identity,
+					starParticleSpeed * Time.deltaTime
+				);
+
+				if (star.position == starsCounter.transform.position)
+					toDelete.Add(star);
+			});
+
+			toDelete.ForEach(item =>
+			{
+				flyingStars.Remove(item);
+				Destroy(item.gameObject);
+
+				currentStarCounter++;
+			});
+
+			starsCounter.text = currentStarCounter.ToString();
+			yield return null;
+		}
+
+		starsCounter.text = totalStarsCount.ToString();
 	}
+
+	public void UpdateTurns(int turns) => turnsCount.text = turns.ToString();
 
 	public void DisplayRequirements(List<Requirement> requirements, Color[] colors)
 	{
@@ -152,8 +215,10 @@ public class GameUIPanel : Panel
 		nodes.ForEach(item => item.SetAsLastSibling());
 	}
 
-	public void ClearCells()
+	public void FinishLink(int totalStarsCount, int addStarsCount)
 	{
+		StartCoroutine(AnimateStars(nodes[^1].position, totalStarsCount, addStarsCount));
+
 		nodes.ForEach(item =>
 		{
 			item.gameObject.SetActive(false);
