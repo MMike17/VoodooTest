@@ -28,18 +28,21 @@ public class GameManager : MonoBehaviour
 	void InitManagers()
 	{
 		inputManager.Init();
+
 		cameraManager.Init(
 			inputManager.ResetTilt,
 			gridManager.ExpandLayers
 		);
+
 		panelsManager.Init(
 			inputManager.ResetTilt,
-			gridManager.StartGame,
+			() => gridManager.StartGame(false),
 			cameraManager.GetUIPos,
-			gridManager.RestartGame,
+			() => gridManager.StartGame(true),
 			gridManager.GetCurrentRequirements,
 			gridManager.GetStars
 		);
+
 		gridManager.Init(
 			cameraManager.SetCanTilt,
 			panelsManager.gameUI.UpdateTurns,

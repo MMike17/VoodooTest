@@ -59,7 +59,7 @@ public class GridManager : MonoBehaviour
 	Action OnGameOver;
 	Action OnWin;
 	int selectedColorIndex;
-	int currentTurn;
+	(int total, int current) turns;
 	bool canLink;
 	bool isLinking;
 
@@ -185,6 +185,8 @@ public class GridManager : MonoBehaviour
 	IEnumerator ShowcaseAnim()
 	{
 		transform.SetPositionAndRotation(showcaseTarget.position, showcaseTarget.rotation);
+
+		SetTilt(false);
 		cellsLayers.ForEach(layer => layer.PositionLayer(1));
 
 		int layerIndex = cellsLayers.Count - 1;
@@ -287,8 +289,8 @@ public class GridManager : MonoBehaviour
 			linkedCells.Clear();
 
 			// turns
-			currentTurn--;
-			SetTurn(currentTurn);
+			turns.current--;
+			SetTurn(turns.current);
 
 			// get points
 
@@ -355,49 +357,57 @@ public class GridManager : MonoBehaviour
 			cell.ForwardAnim();
 		});
 
-		if (canGameOver && currentTurn == 0)
+		if (canGameOver && turns.current == 0)
 			OnGameOver();
 		else
 			canLink = true;
 	}
 
-	public void StartGame()
+	public void StartGame(bool isRestart)
 	{
-		// TODO : Add clear cells here
+		// clear cells
+		cellsLayers.ForEach(layer => layer.cells.ForEach(cell =>
+		{
+			if (cell.transform.childCount > 0)
+				Destroy(cell.transform.GetChild(0).gameObject);
+		}));
 
 		// turns
-		currentTurn = Random.Range(minTurn, maxTurn);
-		SetTurn(currentTurn);
+		if (isRestart)
+			turns.current = turns.total; // reset score
+		else
+			turns.total = turns.current = Random.Range(minTurn, maxTurn);
+
+		SetTurn(turns.current);
 
 		// requirements
-		List<int> possibleColors = new List<int>();
-
-		while (possibleColors.Count < cellColors.Length)
-			possibleColors.Add(possibleColors.Count);
-
-		possibleColors.Add(-1);
-		requiredColors = new List<Requirement>();
-		int requirementCount = Random.Range(minRequirements, maxRequirements);
-
-		while (requirementCount > 0)
+		if (isRestart)
+			requiredColors.ForEach(requirement => requirement.count = requirement.maxCount);
+		else
 		{
-			int index = possibleColors[Random.Range(0, possibleColors.Count)];
+			List<int> possibleColors = new List<int>();
 
-			possibleColors.Remove(index);
-			requiredColors.Add(new Requirement(index, Random.Range(minRequirementAmount, maxRequirementAmount)));
+			while (possibleColors.Count < cellColors.Length)
+				possibleColors.Add(possibleColors.Count);
 
-			requirementCount--;
+			possibleColors.Add(-1);
+			requiredColors = new List<Requirement>();
+			int requirementCount = Random.Range(minRequirements, maxRequirements);
+
+			while (requirementCount > 0)
+			{
+				int index = possibleColors[Random.Range(0, possibleColors.Count)];
+
+				possibleColors.Remove(index);
+				requiredColors.Add(new Requirement(index, Random.Range(minRequirementAmount, maxRequirementAmount)));
+
+				requirementCount--;
+			}
 		}
 
 		DisplayRequirements(requiredColors, cellColors);
 
 		StartCoroutine(ShowcaseAnim());
-	}
-
-	// TODO : Call this from UI
-	public void RestartGame()
-	{
-		// TODO : Finish this
 	}
 
 	public void ExpandLayers(float percent)

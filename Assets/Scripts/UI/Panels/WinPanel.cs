@@ -32,6 +32,8 @@ public class WinPanel : Panel
 
 	IEnumerator AnimateStars()
 	{
+		starsCount.text = "0";
+
 		foreach (Transform star in starsHolder)
 			Destroy(star.gameObject);
 

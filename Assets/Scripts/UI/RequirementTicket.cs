@@ -25,12 +25,13 @@ public class RequirementTicket : MonoBehaviour
 	public class Requirement
 	{
 		public int index;
+		public int maxCount;
 		public int count;
 
 		public Requirement(int index, int count)
 		{
 			this.index = index;
-			this.count = count;
+			maxCount = this.count = count;
 		}
 	}
 }
