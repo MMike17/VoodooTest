@@ -283,7 +283,7 @@ MonoBehaviour:
   maxRequirementAmount: 10
   showcaseTarget: {fileID: 2074396723}
   gameplayTarget: {fileID: 994359405}
-  cellPrefab: {fileID: 77996219993142238, guid: 7c29fef4c3e0e274599372e093fdc30a,
+  cellPrefab: {fileID: 6164640956984165494, guid: dc839d95483745544a8f1378a9dc6d47,
     type: 3}
 --- !u!1 &182242490
 GameObject:

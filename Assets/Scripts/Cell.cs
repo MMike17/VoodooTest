@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using static UnityEngine.EventSystems.EventTrigger;
 
 /// <summary>Cell of the game grid</summary>
+[RequireComponent(typeof(BoxCollider), typeof(EventTrigger), typeof(Animator))]
 public class Cell : MonoBehaviour
 {
 	[Header("References")]
