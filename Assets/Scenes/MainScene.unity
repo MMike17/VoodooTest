@@ -329,8 +329,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5994ef3fa482da043970669e875baa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mobileTiltSensitivity: 1
-  pcTiltSensitivity: 5
+  mobileTiltGyroMult: 1
+  mobileTiltDragMult: 0.01
+  mobileTiltDragGravity: 5
+  pcTiltMult: 7
   pcTiltGravity: 6
   pcTiltUp: 273
   pcTiltDown: 274

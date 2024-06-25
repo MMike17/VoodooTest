@@ -6,8 +6,11 @@ public class InputManager : MonoBehaviour
 	static InputManager instance;
 
 	[Header("Settings")]
-	public float mobileTiltSensitivity;
-	public float pcTiltSensitivity;
+	public float mobileTiltGyroMult;
+	public float mobileTiltDragMult;
+	public float mobileTiltDragGravity;
+	[Space]
+	public float pcTiltMult;
 	public float pcTiltGravity;
 	public KeyCode pcTiltUp = KeyCode.UpArrow;
 	public KeyCode pcTiltDown = KeyCode.DownArrow;
@@ -33,9 +36,9 @@ public class InputManager : MonoBehaviour
 		if (Application.isEditor)
 		{
 			if (Input.GetKey(instance.pcTiltRight))
-				instance.deviceTilt += Vector2.right * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt += Vector2.right * instance.pcTiltMult * Time.deltaTime;
 			else if (Input.GetKey(instance.pcTiltLeft))
-				instance.deviceTilt -= Vector2.right * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt -= Vector2.right * instance.pcTiltMult * Time.deltaTime;
 			else
 			{
 				instance.deviceTilt.x = Mathf.MoveTowards(
@@ -46,9 +49,9 @@ public class InputManager : MonoBehaviour
 			}
 
 			if (Input.GetKey(instance.pcTiltUp))
-				instance.deviceTilt -= Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt -= Vector2.up * instance.pcTiltMult * Time.deltaTime;
 			else if (Input.GetKey(instance.pcTiltDown))
-				instance.deviceTilt += Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
+				instance.deviceTilt += Vector2.up * instance.pcTiltMult * Time.deltaTime;
 			else
 			{
 				instance.deviceTilt.y = Mathf.MoveTowards(
@@ -66,14 +69,24 @@ public class InputManager : MonoBehaviour
 					Input.gyro.enabled = true;
 					Vector2 currentRot = Input.gyro.rotationRate; // consider this an unwrapped version of eulerAngles
 
-					instance.deviceTilt += new Vector2(currentRot.y, currentRot.x) * instance.mobileTiltSensitivity;
+					instance.deviceTilt += new Vector2(currentRot.y, currentRot.x) * instance.mobileTiltGyroMult;
 					break;
 
 				case TiltType.Drag:
 					if (Input.touchCount == 0)
-						instance.deviceTilt = Vector2.zero;
+					{
+						instance.deviceTilt = Vector2.MoveTowards(
+							instance.deviceTilt,
+							Vector2.zero,
+							Time.deltaTime * instance.mobileTiltDragGravity
+						);
+					}
 					else
-						instance.deviceTilt += Input.GetTouch(0).deltaPosition * instance.mobileTiltSensitivity;
+					{
+						Vector2 delta = Input.GetTouch(0).deltaPosition;
+						delta.x *= -1; // have to invert X axis
+						instance.deviceTilt += delta * instance.mobileTiltDragMult;
+					}
 					break;
 			}
 		}
