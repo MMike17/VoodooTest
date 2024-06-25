@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-using static GridManager;
+using static RequirementTicket;
 using static UnityEngine.RectTransform;
 
 public class GameUIPanel : Panel

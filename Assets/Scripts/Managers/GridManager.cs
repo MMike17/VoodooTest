@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using static RequirementTicket;
 using Random = UnityEngine.Random;
 
 /// <summary>Manages the grid of elements</summary>
@@ -412,19 +413,6 @@ public class GridManager : MonoBehaviour
 		public void PositionLayer(float expandAmount)
 		{
 			transform.localPosition = Vector3.Lerp(normalOffset, expandedOffset, expandAmount);
-		}
-	}
-
-	[Serializable] // used for debug
-	public class Requirement
-	{
-		public int index;
-		public int count;
-
-		public Requirement(int index, int count)
-		{
-			this.index = index;
-			this.count = count;
 		}
 	}
 }

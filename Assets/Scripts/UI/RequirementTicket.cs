@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,5 +19,18 @@ public class RequirementTicket : MonoBehaviour
 		countDisplay.text = count.ToString();
 
 		gameObject.SetActive(true);
+	}
+
+	[Serializable] // used for debug
+	public class Requirement
+	{
+		public int index;
+		public int count;
+
+		public Requirement(int index, int count)
+		{
+			this.index = index;
+			this.count = count;
+		}
 	}
 }
