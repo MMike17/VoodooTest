@@ -35,7 +35,9 @@ public class GameManager : MonoBehaviour
 		panelsManager.Init(
 			inputManager.ResetTilt,
 			gridManager.StartGame,
-			cameraManager.GetUIPos
+			cameraManager.GetUIPos,
+			gridManager.RestartGame,
+			gridManager.GetCurrentRequirements
 		);
 		gridManager.Init(
 			cameraManager.SetCanTilt,

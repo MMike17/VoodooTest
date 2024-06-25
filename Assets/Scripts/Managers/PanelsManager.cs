@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using static RequirementTicket;
+
 /// <summary>Manages the display of UI panels</summary>
 public class PanelsManager : MonoBehaviour
 {
@@ -25,7 +27,13 @@ public class PanelsManager : MonoBehaviour
 
 	PanelTag currentPanel;
 
-	public void Init(Action ResetTilt, Action OnPlay, Func<Vector3, Vector3> GetUIPos)
+	public void Init(
+		Action ResetTilt,
+		Action OnPlay,
+		Func<Vector3, Vector3> GetUIPos,
+		Action RestartGame,
+		Func<(Color[], List<Requirement>)> GetCurrentRequirements
+	)
 	{
 		gamePanels.ForEach(item =>
 		{
@@ -53,6 +61,18 @@ public class PanelsManager : MonoBehaviour
 						PopPanel(PanelTag.GameUI);
 						GameManager.SaveData();
 					});
+					break;
+
+				case FailPanel fail:
+					fail.Init(
+						() =>
+						{
+							PopPanel(PanelTag.GameUI);
+							RestartGame();
+						},
+						() => PopPanel(PanelTag.Main_menu),
+						GetCurrentRequirements
+					);
 					break;
 			}
 

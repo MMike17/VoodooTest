@@ -386,10 +386,18 @@ public class GridManager : MonoBehaviour
 		StartCoroutine(ShowcaseAnim());
 	}
 
+	// TODO : Call this from UI
+	public void RestartGame()
+	{
+		// TODO : Finish this
+	}
+
 	public void ExpandLayers(float percent)
 	{
 		cellsLayers.ForEach(cell => cell.PositionLayer(Mathf.Clamp01(percent)));
 	}
+
+	public (Color[], List<Requirement>) GetCurrentRequirements() => (cellColors, requiredColors);
 
 	///<summary>Represents a layer of the grid</summary>
 	[Serializable] // used for debug
