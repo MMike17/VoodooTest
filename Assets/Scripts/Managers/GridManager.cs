@@ -399,6 +399,12 @@ public class GridManager : MonoBehaviour
 
 	public (Color[], List<Requirement>) GetCurrentRequirements() => (cellColors, requiredColors);
 
+	public int GetStars()
+	{
+		// TODO : Finish this
+		return Random.Range(1, 30);
+	}
+
 	///<summary>Represents a layer of the grid</summary>
 	[Serializable] // used for debug
 	public class Layer

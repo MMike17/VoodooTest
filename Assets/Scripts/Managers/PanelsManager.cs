@@ -32,7 +32,8 @@ public class PanelsManager : MonoBehaviour
 		Action OnPlay,
 		Func<Vector3, Vector3> GetUIPos,
 		Action RestartGame,
-		Func<(Color[], List<Requirement>)> GetCurrentRequirements
+		Func<(Color[], List<Requirement>)> GetCurrentRequirements,
+		Func<int> GetStars
 	)
 	{
 		gamePanels.ForEach(item =>
@@ -72,6 +73,13 @@ public class PanelsManager : MonoBehaviour
 						},
 						() => PopPanel(PanelTag.Main_menu),
 						GetCurrentRequirements
+					);
+					break;
+
+				case WinPanel win:
+					win.Init(
+						() => PopPanel(PanelTag.Main_menu),
+						GetStars
 					);
 					break;
 			}

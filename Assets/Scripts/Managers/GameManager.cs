@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
 			gridManager.StartGame,
 			cameraManager.GetUIPos,
 			gridManager.RestartGame,
-			gridManager.GetCurrentRequirements
+			gridManager.GetCurrentRequirements,
+			gridManager.GetStars
 		);
 		gridManager.Init(
 			cameraManager.SetCanTilt,
