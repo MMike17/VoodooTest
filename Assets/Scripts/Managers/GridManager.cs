@@ -247,6 +247,7 @@ public class GridManager : MonoBehaviour
 
 		selectedColorIndex = cell.colorIndex;
 		AddCellUI(cell);
+		SetTilt(false);
 	}
 
 	void HoverCell(Cell cell)
@@ -270,6 +271,7 @@ public class GridManager : MonoBehaviour
 	void FinishLink()
 	{
 		isLinking = false;
+		SetTilt(false);
 
 		// stars
 		int rewardStars = Mathf.Max(linkedCells.Count - minLinkLength, 0);
