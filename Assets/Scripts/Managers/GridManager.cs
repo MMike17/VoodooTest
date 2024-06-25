@@ -236,7 +236,7 @@ public class GridManager : MonoBehaviour
 
 	void StartLink(Cell cell)
 	{
-		if (!canLink || isLinking)
+		if (!canLink || isLinking || cell.gridPos.z > 0)
 			return;
 
 		isLinking = true;
