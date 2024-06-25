@@ -252,6 +252,8 @@ public class GridManager : MonoBehaviour
 		selectedColorIndex = cell.colorIndex;
 		AddCellUI(cell);
 		SetTilt(false);
+
+		PlaySound(SoundTag.Element_Selection);
 	}
 
 	void HoverCell(Cell cell)
@@ -269,6 +271,7 @@ public class GridManager : MonoBehaviour
 		{
 			linkedCells.Add(cell);
 			AddCellUI(cell);
+			PlaySound(SoundTag.Element_Selection);
 		}
 	}
 

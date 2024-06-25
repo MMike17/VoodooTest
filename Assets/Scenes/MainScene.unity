@@ -636,6 +636,9 @@ MonoBehaviour:
   - tag: 0
     clip: {fileID: 8300000, guid: caec5b57fe2d91d4a8e5f99d5ae9ffe6, type: 3}
     volume: 1
+  - tag: 1
+    clip: {fileID: 8300000, guid: ad05d8ba9c279bc449c36e800622e194, type: 3}
+    volume: 0.5
   prewarmSize: 3
   sourcePrefab: {fileID: 174317345629890894, guid: 4762827d92c961a488ab997cb859e9b2,
     type: 3}
@@ -1201,11 +1204,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prettySave: 1
+  inputManager: {fileID: 182242492}
+  audioManager: {fileID: 608994317}
   cameraManager: {fileID: 629214013}
   panelsManager: {fileID: 1802575874}
   gridManager: {fileID: 173964579}
-  inputManager: {fileID: 182242492}
-  audioManager: {fileID: 0}
 --- !u!1001 &1099244538098730485
 PrefabInstance:
   m_ObjectHideFlags: 0
