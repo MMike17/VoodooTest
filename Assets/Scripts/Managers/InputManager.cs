@@ -21,7 +21,6 @@ public class InputManager : MonoBehaviour
 	}
 
 	Vector2 deviceTilt;
-	Vector2 deviceOffset;
 
 	public void Init()
 	{
@@ -47,9 +46,9 @@ public class InputManager : MonoBehaviour
 			}
 
 			if (Input.GetKey(instance.pcTiltUp))
-				instance.deviceTilt += Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
-			else if (Input.GetKey(instance.pcTiltDown))
 				instance.deviceTilt -= Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
+			else if (Input.GetKey(instance.pcTiltDown))
+				instance.deviceTilt += Vector2.up * instance.pcTiltSensitivity * Time.deltaTime;
 			else
 			{
 				instance.deviceTilt.y = Mathf.MoveTowards(
