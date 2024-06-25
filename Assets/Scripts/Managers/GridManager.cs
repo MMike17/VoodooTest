@@ -292,13 +292,21 @@ public class GridManager : MonoBehaviour
 
 			// get points
 
-			MoveNextCellsIn(emptyGridPos);
+			bool canGameOver = true;
+
+			if (requiredColors.Find(item => item.count > 0) == null)
+			{
+				OnWin();
+				canGameOver = false;
+			}
+
+			MoveNextCellsIn(emptyGridPos, canGameOver);
 		}
 
 		linkedCells.Clear();
 	}
 
-	void MoveNextCellsIn(Vector3Int[] gridPos)
+	void MoveNextCellsIn(Vector3Int[] gridPos, bool canGameOver)
 	{
 		List<Cell> movingCells = new List<Cell>();
 
@@ -324,10 +332,10 @@ public class GridManager : MonoBehaviour
 		}
 
 		canLink = false;
-		StartCoroutine(MoveCellsAnim(movingCells));
+		StartCoroutine(MoveCellsAnim(movingCells, canGameOver));
 	}
 
-	IEnumerator MoveCellsAnim(List<Cell> cells)
+	IEnumerator MoveCellsAnim(List<Cell> cells, bool canGameOver)
 	{
 		Vector3 initialCellPos = cells[0].transform.localPosition;
 		float timer = 0;
@@ -347,7 +355,7 @@ public class GridManager : MonoBehaviour
 			cell.ForwardAnim();
 		});
 
-		if (currentTurn == 0)
+		if (canGameOver && currentTurn == 0)
 			OnGameOver();
 		else
 			canLink = true;

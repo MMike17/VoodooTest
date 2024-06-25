@@ -27,7 +27,6 @@ public class WinPanel : Panel
 	public override void Open()
 	{
 		base.Open();
-
 		StartCoroutine(AnimateStars());
 	}
 
@@ -36,11 +35,17 @@ public class WinPanel : Panel
 		foreach (Transform star in starsHolder)
 			Destroy(star.gameObject);
 
-		yield return new WaitUntil(() => base.anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f);
+		yield return new WaitUntil(() =>
+		{
+			AnimatorStateInfo info = base.anim.GetCurrentAnimatorStateInfo(0);
+			return info.IsName("Open") && info.normalizedTime > 0.95f;
+		});
 
 		int targetCount = GetStars();
 		int count = 0;
 		float timer = 0;
+
+		starsCount.text = count.ToString();
 
 		while (count < targetCount)
 		{
