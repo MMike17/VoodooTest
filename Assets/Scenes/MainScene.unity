@@ -372,8 +372,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  minTurn: 10
-  maxTurn: 20
+  turnGain: 1.5
   minRequirements: 1
   maxRequirements: 3
   minRequirementAmount: 5

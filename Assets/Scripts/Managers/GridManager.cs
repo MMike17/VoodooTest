@@ -273,8 +273,6 @@ public class GridManager : MonoBehaviour
 
 		if ((gridOffset.x * (gridOffset.x < 0 ? -1 : 1)) <= 1 && (gridOffset.y * (gridOffset.y < 0 ? -1 : 1)) <= 1)
 		{
-			Debug.Log("Selected : " + cell.gridPos);
-
 			linkedCells.Add(cell);
 			AddCellUI(cell);
 			PlaySound(SoundTag.Element_Selection);
