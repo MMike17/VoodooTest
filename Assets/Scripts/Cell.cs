@@ -48,10 +48,8 @@ public class Cell : MonoBehaviour
 		return entry;
 	}
 
-	// TODO : Make "Pop" anim
 	public void ForwardAnim()
 	{
-		anim.Play("Pop");
 		gridPos = new Vector3Int(gridPos.x, gridPos.y, gridPos.z - 1);
 		debug_gridPos = gridPos;
 	}

@@ -478,7 +478,7 @@ public class GridManager : MonoBehaviour
 
 		// color shift
 		EnvironmentWin();
-		yield return new WaitForSeconds(3);
+		yield return new WaitForSeconds(2);
 
 		OnWin();
 	}
