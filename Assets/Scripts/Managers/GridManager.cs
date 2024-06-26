@@ -258,7 +258,9 @@ public class GridManager : MonoBehaviour
 
 	void HoverCell(Cell cell)
 	{
-		if (!isLinking || linkedCells.Contains(cell) || cell.colorIndex != selectedColorIndex)
+		bool validColor = cell.colorIndex == selectedColorIndex || cell.colorIndex == -1;
+
+		if (!isLinking || linkedCells.Contains(cell) || !validColor)
 			return;
 
 		Cell lastCell = linkedCells[^1];
@@ -269,6 +271,8 @@ public class GridManager : MonoBehaviour
 
 		if ((gridOffset.x * (gridOffset.x < 0 ? -1 : 1)) <= 1 && (gridOffset.y * (gridOffset.y < 0 ? -1 : 1)) <= 1)
 		{
+			Debug.Log("Selected : " + cell.gridPos);
+
 			linkedCells.Add(cell);
 			AddCellUI(cell);
 			PlaySound(SoundTag.Element_Selection);
@@ -278,7 +282,6 @@ public class GridManager : MonoBehaviour
 	void FinishLink()
 	{
 		isLinking = false;
-		SetTilt(false);
 
 		// stars
 		int rewardStars = Mathf.Max(linkedCells.Count - minLinkLength, 0);
@@ -289,6 +292,8 @@ public class GridManager : MonoBehaviour
 
 		if (linkedCells.Count >= minLinkLength)
 		{
+			SetTilt(false);
+
 			// requirements
 			requiredColors.FindAll(item => item.index == -1 || item.index == selectedColorIndex)
 				.ForEach(requirement => requirement.count -= linkedCells.Count);
@@ -319,6 +324,8 @@ public class GridManager : MonoBehaviour
 			PlaySound(SoundTag.Element_Destruction);
 			MoveNextCellsIn(emptyGridPos, canGameOver);
 		}
+		else
+			PlaySound(SoundTag.Link_too_short);
 
 		linkedCells.Clear();
 	}
@@ -336,15 +343,32 @@ public class GridManager : MonoBehaviour
 				// it's faster to get the index arithmetically
 				int cellIndex = pos.x + pos.y * gridSize;
 				Cell cell = cellsLayers[i].cells[cellIndex].transform.GetComponentInChildren<Cell>();
+				bool shouldSpawnOmni = false;
 
 				if (cell != null)
 				{
 					// i should never be equal to 0 since pos.z can't be < 0
 					cell.transform.SetParent(cellsLayers[i - 1].cells[cellIndex].transform);
 					movingCells.Add(cell);
+
+					if (
+						i + 1 < cellsLayers.Count &&
+						cellsLayers[i + 1].cells[cellIndex].transform.GetComponentInChildren<Cell>()
+					)
+					{
+						shouldSpawnOmni = true;
+					}
 				}
 				else
-					break; // we don't need to loop any further (subsequent cells are empty)
+					shouldSpawnOmni = true;
+
+				if (shouldSpawnOmni)
+				{
+					Cell omniCell = Instantiate(cellPrefab, cellsLayers[i].cells[cellIndex].transform);
+					omniCell.Init(Color.grey, -1, cellsLayers[i].cells[cellIndex].gridPos, StartLink, HoverCell);
+					omniCell.transform.position = cellsLayers[i - 1].cells[cellIndex].transform.position;
+					movingCells.Add(omniCell);
+				}
 			}
 		}
 
