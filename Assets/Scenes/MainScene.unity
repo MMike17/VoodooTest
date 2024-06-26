@@ -292,7 +292,7 @@ MonoBehaviour:
   - {r: 0, g: 0.75025225, b: 1, a: 1}
   - {r: 1, g: 0, b: 0.48802376, a: 1}
   - {r: 0, g: 1, b: 0.66232514, a: 1}
-  gridDepth: 8
+  gridDepth: 3
   layerSpacing: 1
   expandedSpacing: 4
   expandingCurve:

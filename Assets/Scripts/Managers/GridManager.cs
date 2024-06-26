@@ -330,12 +330,12 @@ public class GridManager : MonoBehaviour
 		linkedCells.Clear();
 	}
 
-	void MoveNextCellsIn(Vector3Int[] gridPos, bool canGameOver)
+	void MoveNextCellsIn(Vector3Int[] gridPositions, bool canGameOver)
 	{
 		List<Cell> movingCells = new List<Cell>();
 
 		// we only loop through the cells we need
-		foreach (Vector3Int pos in gridPos)
+		foreach (Vector3Int pos in gridPositions)
 		{
 			// select all cells at the same coord with higher depth
 			for (int i = pos.z + 1; i < cellsLayers.Count; i++)
@@ -351,22 +351,24 @@ public class GridManager : MonoBehaviour
 					cell.transform.SetParent(cellsLayers[i - 1].cells[cellIndex].transform);
 					movingCells.Add(cell);
 
-					if (
-						i + 1 < cellsLayers.Count &&
-						cellsLayers[i + 1].cells[cellIndex].transform.GetComponentInChildren<Cell>()
-					)
-					{
+					if (i + 1 == cellsLayers.Count || cellsLayers[i + 1].cells[cellIndex].transform.childCount == 0)
 						shouldSpawnOmni = true;
-					}
 				}
 				else
 					shouldSpawnOmni = true;
 
 				if (shouldSpawnOmni)
 				{
+					Vector3Int gridPos = cellsLayers[i].cells[cellIndex].gridPos;
+					gridPos.z = i + 1; // even if layer i+1 doesn't exist we still get a virtual grid pos
+
 					Cell omniCell = Instantiate(cellPrefab, cellsLayers[i].cells[cellIndex].transform);
-					omniCell.Init(Color.grey, -1, cellsLayers[i].cells[cellIndex].gridPos, StartLink, HoverCell);
-					omniCell.transform.position = cellsLayers[i - 1].cells[cellIndex].transform.position;
+					omniCell.Init(Color.grey, -1, gridPos, StartLink, HoverCell);
+
+					omniCell.transform.position = i + 1 == cellsLayers.Count ?
+						cellsLayers[i].cells[cellIndex].transform.position :
+						cellsLayers[i + 1].cells[cellIndex].transform.position; ;
+
 					movingCells.Add(omniCell);
 				}
 			}
