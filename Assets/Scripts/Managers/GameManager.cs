@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using static EnvironmentManager;
+
 /// <summary>Manages the main flow of the game</summary>
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class GameManager : MonoBehaviour
 
 	[Header("Managers")]
 	public HapticsManager hapticsManager;
+	public EnvironmentManager environmentManager;
+	[Space]
 	public InputManager inputManager;
 	public AudioManager audioManager;
 	public CameraManager cameraManager;
@@ -41,7 +45,11 @@ public class GameManager : MonoBehaviour
 			inputManager.ResetTilt,
 			() => gridManager.StartGame(false),
 			cameraManager.GetUIPos,
-			() => gridManager.StartGame(true),
+			() =>
+			{
+				gridManager.StartGame(true);
+				environmentManager.Restart();
+			},
 			gridManager.GetCurrentRequirements,
 			gridManager.GetStars,
 			audioManager.PlaySound,
@@ -55,8 +63,16 @@ public class GameManager : MonoBehaviour
 			panelsManager.gameUI.AddCell,
 			panelsManager.gameUI.FinishLink,
 			audioManager.PlaySound,
-			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
-			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win),
+			() =>
+			{
+				panelsManager.PopPanel(PanelsManager.PanelTag.Lose);
+				environmentManager.SwitchColor(ColorTag.Lose);
+			},
+			() =>
+			{
+				panelsManager.PopPanel(PanelsManager.PanelTag.Win);
+				environmentManager.SwitchColor(ColorTag.Lose);
+			},
 			hapticsManager.Vibrate
 		);
 	}
