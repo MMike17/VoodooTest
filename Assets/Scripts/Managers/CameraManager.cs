@@ -160,5 +160,6 @@ public class CameraManager : MonoBehaviour
 		ResetTilt();
 	}
 
-	public Vector3 GetUIPos(Vector3 position) => mainCamera.WorldToScreenPoint(position);
+	// make sure we negate Z pos
+	public Vector2 GetUIPos(Vector3 position) => mainCamera.WorldToScreenPoint(position);
 }

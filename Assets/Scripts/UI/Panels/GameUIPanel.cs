@@ -38,9 +38,9 @@ public class GameUIPanel : Panel
 	List<RectTransform> nodePool;
 	List<RectTransform> links;
 	List<RectTransform> linkPool;
-	Func<Vector3, Vector3> GetUIPos;
+	Func<Vector3, Vector2> GetUIPos;
 
-	public void Init(Action OnOpenSettings, Action ResetTilt, Func<Vector3, Vector3> getUIPos)
+	public void Init(Action OnOpenSettings, Action ResetTilt, Func<Vector3, Vector2> getUIPos)
 	{
 		GetUIPos = getUIPos;
 		selectedCells = new List<Cell>();
@@ -94,8 +94,10 @@ public class GameUIPanel : Panel
 		}
 	}
 
-	IEnumerator AnimateStars(Vector3 spawnPos, int totalStarsCount, int addStarsCount)
+	IEnumerator AnimateStars(Vector2 spawnPos, int totalStarsCount, int addStarsCount)
 	{
+		Debug.DrawLine(spawnPos, starsCounter.transform.position, Color.red, 10);
+
 		// TODO : Pool stars
 		List<RectTransform> flyingStars = new List<RectTransform>();
 		float distance = Vector3.Distance(spawnPos, starsCounter.transform.position);
@@ -111,8 +113,12 @@ public class GameUIPanel : Panel
 			{
 				timer -= starDuration;
 
-				flyingStars.Add(Instantiate(starPrefab, starHolder));
-				flyingStars[^1].rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+				flyingStars.Add(Instantiate(
+					starPrefab,
+					spawnPos,
+					Quaternion.Euler(0, 0, Random.Range(0, 360)),
+					starHolder
+				));
 
 				addStarsCount--;
 			}

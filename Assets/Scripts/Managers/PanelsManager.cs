@@ -30,7 +30,7 @@ public class PanelsManager : MonoBehaviour
 	public void Init(
 		Action ResetTilt,
 		Action OnPlay,
-		Func<Vector3, Vector3> GetUIPos,
+		Func<Vector3, Vector2> GetUIPos,
 		Action RestartGame,
 		Func<(Color[], List<Requirement>)> GetCurrentRequirements,
 		Func<int> GetStars
