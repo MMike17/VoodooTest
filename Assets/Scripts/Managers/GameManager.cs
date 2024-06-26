@@ -67,16 +67,10 @@ public class GameManager : MonoBehaviour
 			panelsManager.gameUI.AddCell,
 			panelsManager.gameUI.FinishLink,
 			audioManager.PlaySound,
-			() =>
-			{
-				panelsManager.PopPanel(PanelsManager.PanelTag.Lose);
-				environmentManager.SwitchColor(ColorTag.Lose);
-			},
-			() =>
-			{
-				panelsManager.PopPanel(PanelsManager.PanelTag.Win);
-				environmentManager.SwitchColor(ColorTag.Win);
-			},
+			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
+			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win),
+			() => environmentManager.SwitchColor(ColorTag.Win),
+			() => environmentManager.SwitchColor(ColorTag.Lose),
 			hapticsManager.Vibrate,
 			environmentManager.transform
 		);

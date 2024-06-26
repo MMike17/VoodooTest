@@ -23,8 +23,18 @@ public class GridManager : MonoBehaviour
 	public float expandedSpacing;
 	public AnimationCurve expandingCurve;
 	[Space]
+	public float turnGain;
+	[Space]
+	public int minRequirements;
+	public int maxRequirements;
+	public int minRequirementAmount;
+	public int maxRequirementAmount;
+
+	[Header("Animation settings")]
 	public float spawnLayerDelay; // grid size * grid size * spawnCellDelay = time to spawn 1 layer
 	public float spawnCellDelay;
+	public float cellSpawnLayerDist;
+	public float cellMoveDuration;
 	public float showcaseEndDelay;
 	[Space]
 	public float toGameplayDuration;
@@ -33,12 +43,7 @@ public class GridManager : MonoBehaviour
 	public float elementForwardDuration;
 	public AnimationCurve elementForwardCurve;
 	[Space]
-	public float turnGain;
-	[Space]
-	public int minRequirements;
-	public int maxRequirements;
-	public int minRequirementAmount;
-	public int maxRequirementAmount;
+	public float cellCollapseSpeed;
 
 	// TODO : Move most of the game design settings to a separate scriptable object
 
@@ -59,6 +64,8 @@ public class GridManager : MonoBehaviour
 	Action<bool> SetTilt;
 	Action OnGameOver;
 	Action OnWin;
+	Action EnvironmentWin;
+	Action EnvironmentLose;
 	Action Vibrate;
 	Transform environment;
 	(int total, int current) turns;
@@ -119,6 +126,8 @@ public class GridManager : MonoBehaviour
 		Action<SoundTag> playSound,
 		Action onGameOver,
 		Action onWin,
+		Action environmentWin,
+		Action environmentLose,
 		Action vibrate,
 		Transform environment
 	)
@@ -131,6 +140,8 @@ public class GridManager : MonoBehaviour
 		PlaySound = playSound;
 		OnGameOver = onGameOver;
 		OnWin = onWin;
+		EnvironmentWin = environmentWin;
+		EnvironmentLose = environmentLose;
 		Vibrate = vibrate;
 		this.environment = environment;
 
@@ -243,11 +254,26 @@ public class GridManager : MonoBehaviour
 
 			// TODO : Pooling this would probably have the highest impact on performances
 			Cell cell = Instantiate(cellPrefab, cellPoint);
-			cell.transform.localPosition = Vector3.zero;
-
 			int colorIndex = Random.Range(0, cellColors.Length);
 			cell.Init(cellColors[colorIndex], colorIndex, gridPos, StartLink, HoverCell);
+
+			StartCoroutine(MoveCellToLocalZero(cell, cellSize + expandedSpacing * cellSpawnLayerDist));
 		}
+	}
+
+	IEnumerator MoveCellToLocalZero(Cell cell, float initialDistance)
+	{
+		float timer = 0;
+		Vector3 initialPos = initialDistance * Vector3.forward;
+
+		while (timer < cellMoveDuration)
+		{
+			timer += Time.deltaTime;
+			cell.transform.localPosition = Vector3.Lerp(initialPos, Vector3.zero, timer / cellMoveDuration);
+			yield return null;
+		}
+
+		cell.transform.localPosition = Vector3.zero;
 	}
 
 	void StartLink(Cell cell)
@@ -325,8 +351,8 @@ public class GridManager : MonoBehaviour
 
 			if (requiredColors.Find(item => item.count > 0) == null)
 			{
-				OnWin();
 				canGameOver = false;
+				StartCoroutine(WinAnimation());
 			}
 
 			PlaySound(SoundTag.Element_Destruction);
@@ -407,9 +433,91 @@ public class GridManager : MonoBehaviour
 		});
 
 		if (canGameOver && turns.current == 0)
-			OnGameOver();
+			StartCoroutine(LoseAnimation());
 		else
 			canLink = true;
+	}
+
+	IEnumerator WinAnimation()
+	{
+		// move to showcase view
+		float timer = 0;
+
+		while (timer < toGameplayDuration)
+		{
+			timer += Time.deltaTime;
+			float percent = toGameplayCurve.Evaluate(timer / toGameplayDuration);
+
+			transform.SetPositionAndRotation(
+				Vector3.Lerp(gameplayTarget.position, showcaseTarget.position, percent),
+				Quaternion.Lerp(gameplayTarget.rotation, showcaseTarget.rotation, percent)
+			);
+
+			ExpandLayers(percent);
+			yield return null;
+		}
+
+		yield return CollapseCellsAnim();
+
+		// move to gameplay view
+		timer = 0;
+
+		while (timer < toGameplayDuration)
+		{
+			timer += Time.deltaTime;
+			float percent = toGameplayCurve.Evaluate(timer / toGameplayDuration);
+
+			transform.SetPositionAndRotation(
+				Vector3.Lerp(showcaseTarget.position, gameplayTarget.position, percent),
+				Quaternion.Lerp(showcaseTarget.rotation, gameplayTarget.rotation, percent)
+			);
+
+			ExpandLayers(1 - percent);
+			yield return null;
+		}
+
+		// color shift
+		EnvironmentWin();
+		yield return new WaitForSeconds(3);
+
+		OnWin();
+	}
+
+	IEnumerator LoseAnimation()
+	{
+		EnvironmentLose();
+
+		yield return CollapseCellsAnim();
+		yield return new WaitForSeconds(1);
+
+		OnGameOver();
+	}
+
+	IEnumerator CollapseCellsAnim()
+	{
+		// collapse cells to CPU
+		float duration = Vector3.Distance(cellsLayers[0].transform.position, environment.position) / cellCollapseSpeed;
+		float timer = 0;
+
+		while (timer < duration)
+		{
+			timer += Time.deltaTime;
+
+			cellsLayers.ForEach(layer => layer.cells.ForEach(cell =>
+			{
+				// this is pretty ugly but I'm running out of time
+				Transform element = cell.transform.GetComponentInChildren<Cell>().transform;
+				Vector3 localTgtPos = (cellSize + expandedSpacing) * (cellsLayers.Count + 1 - cell.gridPos.z) * Vector3.forward;
+
+				element.localPosition = Vector3.MoveTowards(
+					element.localPosition,
+					localTgtPos,
+					cellCollapseSpeed * Time.deltaTime
+				);
+			}));
+
+			yield return null;
+		}
 	}
 
 	public void StartGame(bool isRestart)
