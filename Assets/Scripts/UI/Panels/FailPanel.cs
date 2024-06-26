@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static AudioManager;
 using static RequirementTicket;
 
 public class FailPanel : Panel
@@ -14,10 +15,12 @@ public class FailPanel : Panel
 	public Button toMenuButton;
 
 	Func<(Color[], List<Requirement>)> GetCurrentRequirements;
+	Action<SoundTag> PlaySound;
 
-	public void Init(Action RestartGame, Action ToMainMenu, Func<(Color[], List<Requirement>)> getCurrentRequirements)
+	public void Init(Action RestartGame, Action ToMainMenu, Func<(Color[], List<Requirement>)> getCurrentRequirements, Action<SoundTag> playSound)
 	{
 		GetCurrentRequirements = getCurrentRequirements;
+		PlaySound = playSound;
 
 		restartButton.onClick.AddListener(() => RestartGame());
 		toMenuButton.onClick.AddListener(() => ToMainMenu());
@@ -25,6 +28,7 @@ public class FailPanel : Panel
 
 	public override void Open()
 	{
+		PlaySound(SoundTag.Lose);
 		(Color[] colors, List<Requirement> requirements) = GetCurrentRequirements();
 		int index = 0;
 

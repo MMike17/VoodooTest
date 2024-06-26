@@ -75,7 +75,8 @@ public class PanelsManager : MonoBehaviour
 							RestartGame();
 						},
 						() => PopPanel(PanelTag.Main_menu),
-						GetCurrentRequirements
+						GetCurrentRequirements,
+						PlaySound
 					);
 					break;
 
