@@ -57,7 +57,8 @@ public class GameManager : MonoBehaviour
 			gridManager.GetCurrentRequirements,
 			gridManager.GetStars,
 			audioManager.PlaySound,
-			hapticsManager.Vibrate
+			hapticsManager.Vibrate,
+			environmentManager.normalGlintColor
 		);
 
 		gridManager.Init(

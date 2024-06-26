@@ -41,16 +41,19 @@ public class GameUIPanel : Panel
 	List<RectTransform> linkPool;
 	Func<Vector3, Vector2> GetUIPos;
 	Action<SoundTag> PlaySound;
+	Color uiColor;
 
 	public void Init(
 		Action OnOpenSettings,
 		Action ResetTilt,
 		Func<Vector3, Vector2> getUIPos,
-		Action<SoundTag> playSound
+		Action<SoundTag> playSound,
+		Color uiColor
 	)
 	{
 		GetUIPos = getUIPos;
 		PlaySound = playSound;
+		this.uiColor = uiColor;
 		selectedCells = new List<Cell>();
 
 		nodes = new List<RectTransform>();
@@ -64,8 +67,16 @@ public class GameUIPanel : Panel
 			linkPool.Add(Instantiate(linkPrefab, linksHolder));
 		}
 
-		nodePool.ForEach(node => node.gameObject.SetActive(false));
-		linkPool.ForEach(node => node.gameObject.SetActive(false));
+		nodePool.ForEach(node =>
+		{
+			node.gameObject.SetActive(false);
+			node.GetComponent<Image>().color = uiColor;
+		});
+		linkPool.ForEach(link =>
+		{
+			link.gameObject.SetActive(false);
+			link.GetComponent<Image>().color = uiColor;
+		});
 
 		openSettingsButton.onClick.AddListener(() => OnOpenSettings());
 		resetTiltButton.onClick.AddListener(() => ResetTilt());
@@ -205,7 +216,10 @@ public class GameUIPanel : Panel
 			nodePool.Remove(node);
 		}
 		else
+		{
 			node = Instantiate(nodePrefab, linksHolder);
+			node.GetComponent<Image>().color = uiColor;
+		}
 
 		nodes.Add(node);
 
@@ -220,7 +234,10 @@ public class GameUIPanel : Panel
 				linkPool.Remove(link);
 			}
 			else
+			{
 				link = Instantiate(linkPrefab, linksHolder);
+				link.GetComponent<Image>().color = uiColor;
+			}
 
 			links.Add(link);
 		}

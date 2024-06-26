@@ -463,11 +463,11 @@ MonoBehaviour:
   cellSpacing: 0.2
   minLinkLength: 3
   cellColors:
-  - {r: 1, g: 0.4138754, b: 0, a: 1}
-  - {r: 0.73763454, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0.75025225, b: 1, a: 1}
-  - {r: 1, g: 0, b: 0.48802376, a: 1}
-  - {r: 0, g: 1, b: 0.66232514, a: 1}
+  - {r: 0, g: 0.5, b: 1, a: 1}
+  - {r: 0, g: 1, b: 0.66666675, a: 1}
+  - {r: 1, g: 0.92395794, b: 0, a: 1}
+  - {r: 1, g: 0.50775915, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0.66812706, a: 1}
   gridDepth: 7
   layerSpacing: 1
   expandedSpacing: 4
