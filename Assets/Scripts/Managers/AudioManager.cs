@@ -56,6 +56,9 @@ public class AudioManager : MonoBehaviour
 
 	public void PlaySound(SoundTag tag)
 	{
+		if (!GameManager.save.soundOn)
+			return;
+
 		AudioSettings selected = settings.Find(item => item.tag == tag);
 
 		if (selected == null)
