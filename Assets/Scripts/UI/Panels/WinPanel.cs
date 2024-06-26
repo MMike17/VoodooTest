@@ -19,11 +19,13 @@ public class WinPanel : Panel
 
 	Func<int> GetStars;
 	Action<SoundTag> PlaySound;
+	Action Vibrate;
 
-	public void Init(Action ToMainMenu, Func<int> getStars, Action<SoundTag> playSound)
+	public void Init(Action ToMainMenu, Func<int> getStars, Action<SoundTag> playSound, Action vibrate)
 	{
 		GetStars = getStars;
 		PlaySound = playSound;
+		Vibrate = vibrate;
 
 		mainMenuButton.onClick.AddListener(() => ToMainMenu());
 	}
@@ -32,6 +34,7 @@ public class WinPanel : Panel
 	{
 		base.Open();
 		PlaySound(SoundTag.Win);
+		Vibrate();
 		StartCoroutine(AnimateStars());
 	}
 

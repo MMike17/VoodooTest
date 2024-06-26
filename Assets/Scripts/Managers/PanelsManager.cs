@@ -35,7 +35,8 @@ public class PanelsManager : MonoBehaviour
 		Action RestartGame,
 		Func<(Color[], List<Requirement>)> GetCurrentRequirements,
 		Func<int> GetStars,
-		Action<SoundTag> PlaySound
+		Action<SoundTag> PlaySound,
+		Action Vibrate
 	)
 	{
 		gamePanels.ForEach(item =>
@@ -84,7 +85,8 @@ public class PanelsManager : MonoBehaviour
 					win.Init(
 						() => PopPanel(PanelTag.Main_menu),
 						GetStars,
-						PlaySound
+						PlaySound,
+						Vibrate
 					);
 					break;
 			}

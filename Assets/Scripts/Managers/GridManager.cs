@@ -60,6 +60,7 @@ public class GridManager : MonoBehaviour
 	Action<bool> SetTilt;
 	Action OnGameOver;
 	Action OnWin;
+	Action Vibrate;
 	(int total, int current) turns;
 	int selectedColorIndex;
 	int starsCount;
@@ -117,7 +118,8 @@ public class GridManager : MonoBehaviour
 		Action<int, int> finishLineUI,
 		Action<SoundTag> playSound,
 		Action onGameOver,
-		Action onWin
+		Action onWin,
+		Action vibrate
 	)
 	{
 		SetTilt = setTilt;
@@ -128,6 +130,7 @@ public class GridManager : MonoBehaviour
 		PlaySound = playSound;
 		OnGameOver = onGameOver;
 		OnWin = onWin;
+		Vibrate = vibrate;
 		linkedCells = new List<Cell>();
 		canLink = false;
 		isLinking = false;
@@ -282,6 +285,7 @@ public class GridManager : MonoBehaviour
 	void FinishLink()
 	{
 		isLinking = false;
+		Vibrate();
 
 		// stars
 		int rewardStars = Mathf.Max(linkedCells.Count - minLinkLength, 0);

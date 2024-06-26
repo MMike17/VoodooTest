@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 	public bool prettySave;
 
 	[Header("Managers")]
+	public HapticsManager hapticsManager;
 	public InputManager inputManager;
 	public AudioManager audioManager;
 	public CameraManager cameraManager;
@@ -43,7 +44,8 @@ public class GameManager : MonoBehaviour
 			() => gridManager.StartGame(true),
 			gridManager.GetCurrentRequirements,
 			gridManager.GetStars,
-			audioManager.PlaySound
+			audioManager.PlaySound,
+			hapticsManager.Vibrate
 		);
 
 		gridManager.Init(
@@ -54,7 +56,8 @@ public class GameManager : MonoBehaviour
 			panelsManager.gameUI.FinishLink,
 			audioManager.PlaySound,
 			() => panelsManager.PopPanel(PanelsManager.PanelTag.Lose),
-			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win)
+			() => panelsManager.PopPanel(PanelsManager.PanelTag.Win),
+			hapticsManager.Vibrate
 		);
 	}
 
