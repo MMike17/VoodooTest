@@ -42,7 +42,8 @@ public class GameManager : MonoBehaviour
 			cameraManager.GetUIPos,
 			() => gridManager.StartGame(true),
 			gridManager.GetCurrentRequirements,
-			gridManager.GetStars
+			gridManager.GetStars,
+			audioManager.PlaySound
 		);
 
 		gridManager.Init(

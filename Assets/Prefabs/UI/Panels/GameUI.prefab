@@ -1106,7 +1106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 1770457855}
   prewarmPoolSize: 3
-  starParticleSpeed: 2000
+  starParticleSpeed: 2500
   openSettingsButton: {fileID: 1524172901}
   resetTiltButton: {fileID: 1862995307}
   turnsCount: {fileID: 2122974354181129127}

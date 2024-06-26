@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static AudioManager;
+
 public class WinPanel : Panel
 {
 	[Header("Settings")]
@@ -16,10 +18,12 @@ public class WinPanel : Panel
 	public Button mainMenuButton;
 
 	Func<int> GetStars;
+	Action<SoundTag> PlaySound;
 
-	public void Init(Action ToMainMenu, Func<int> getStars)
+	public void Init(Action ToMainMenu, Func<int> getStars, Action<SoundTag> playSound)
 	{
 		GetStars = getStars;
+		PlaySound = playSound;
 
 		mainMenuButton.onClick.AddListener(() => ToMainMenu());
 	}
@@ -60,6 +64,7 @@ public class WinPanel : Panel
 
 				// TODO : Pool this (we're going to have a bunch of them)
 				Instantiate(starPrefab, starsHolder);
+				PlaySound(SoundTag.Star);
 			}
 
 			starsCount.text = count.ToString();

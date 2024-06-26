@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static AudioManager;
 using static RequirementTicket;
 using static UnityEngine.RectTransform;
 using Random = UnityEngine.Random;
@@ -39,10 +40,17 @@ public class GameUIPanel : Panel
 	List<RectTransform> links;
 	List<RectTransform> linkPool;
 	Func<Vector3, Vector2> GetUIPos;
+	Action<SoundTag> PlaySound;
 
-	public void Init(Action OnOpenSettings, Action ResetTilt, Func<Vector3, Vector2> getUIPos)
+	public void Init(
+		Action OnOpenSettings,
+		Action ResetTilt,
+		Func<Vector3, Vector2> getUIPos,
+		Action<SoundTag> playSound
+	)
 	{
 		GetUIPos = getUIPos;
+		PlaySound = playSound;
 		selectedCells = new List<Cell>();
 
 		nodes = new List<RectTransform>();
@@ -96,8 +104,6 @@ public class GameUIPanel : Panel
 
 	IEnumerator AnimateStars(Vector2 spawnPos, int totalStarsCount, int addStarsCount)
 	{
-		Debug.DrawLine(spawnPos, starsCounter.transform.position, Color.red, 10);
-
 		// TODO : Pool stars
 		List<RectTransform> flyingStars = new List<RectTransform>();
 		float distance = Vector3.Distance(spawnPos, starsCounter.transform.position);
@@ -147,6 +153,7 @@ public class GameUIPanel : Panel
 				Destroy(item.gameObject);
 
 				currentStarCounter++;
+				PlaySound(SoundTag.Star);
 			});
 
 			starsCounter.text = currentStarCounter.ToString();

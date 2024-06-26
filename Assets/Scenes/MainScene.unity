@@ -836,6 +836,15 @@ MonoBehaviour:
   - tag: 2
     clip: {fileID: 8300000, guid: d70947cc87d98e04fab3fc34f66c4973, type: 3}
     volume: 0.8
+  - tag: 3
+    clip: {fileID: 8300000, guid: 5425ca73f9509fd4099cb636b24d8926, type: 3}
+    volume: 0.5
+  - tag: 4
+    clip: {fileID: 8300000, guid: 4014620baa4a1244382ec37bf4b1b6ea, type: 3}
+    volume: 0.8
+  - tag: 5
+    clip: {fileID: 8300000, guid: 09ef1e0515fed0f428bc46a5fd56ac1f, type: 3}
+    volume: 1
   prewarmSize: 3
   sourcePrefab: {fileID: 174317345629890894, guid: 4762827d92c961a488ab997cb859e9b2,
     type: 3}

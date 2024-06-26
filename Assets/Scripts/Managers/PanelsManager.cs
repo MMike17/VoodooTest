@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using static AudioManager;
 using static RequirementTicket;
 
 /// <summary>Manages the display of UI panels</summary>
@@ -33,7 +34,8 @@ public class PanelsManager : MonoBehaviour
 		Func<Vector3, Vector2> GetUIPos,
 		Action RestartGame,
 		Func<(Color[], List<Requirement>)> GetCurrentRequirements,
-		Func<int> GetStars
+		Func<int> GetStars,
+		Action<SoundTag> PlaySound
 	)
 	{
 		gamePanels.ForEach(item =>
@@ -52,7 +54,8 @@ public class PanelsManager : MonoBehaviour
 					gameUI.Init(
 						() => PopPanel(PanelTag.Settings),
 						ResetTilt,
-						GetUIPos
+						GetUIPos,
+						PlaySound
 					);
 					break;
 
@@ -79,7 +82,8 @@ public class PanelsManager : MonoBehaviour
 				case WinPanel win:
 					win.Init(
 						() => PopPanel(PanelTag.Main_menu),
-						GetStars
+						GetStars,
+						PlaySound
 					);
 					break;
 			}
