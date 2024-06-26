@@ -33,8 +33,7 @@ public class GridManager : MonoBehaviour
 	public float elementForwardDuration;
 	public AnimationCurve elementForwardCurve;
 	[Space]
-	public int minTurn;
-	public int maxTurn;
+	public float turnGain;
 	[Space]
 	public int minRequirements;
 	public int maxRequirements;
@@ -419,14 +418,6 @@ public class GridManager : MonoBehaviour
 				Destroy(cell.transform.GetChild(0).gameObject);
 		}));
 
-		// turns
-		if (isRestart)
-			turns.current = turns.total; // reset score
-		else
-			turns.total = turns.current = Random.Range(minTurn, maxTurn);
-
-		SetTurn(turns.current);
-
 		// requirements
 		if (isRestart)
 			requiredColors.ForEach(requirement => requirement.count = requirement.maxCount);
@@ -451,6 +442,19 @@ public class GridManager : MonoBehaviour
 				requirementCount--;
 			}
 		}
+
+		// turns
+		if (isRestart)
+			turns.current = turns.total; // reset score
+		else
+		{
+			// turn count depends on requirements amount
+			int totalRequest = 0;
+			requiredColors.ForEach(item => totalRequest += item.count);
+			turns.total = turns.current = Mathf.FloorToInt(totalRequest / requiredColors.Count * turnGain);
+		}
+
+		SetTurn(turns.current);
 
 		DisplayRequirements(requiredColors, cellColors);
 
