@@ -43,7 +43,11 @@ public class GameManager : MonoBehaviour
 
 		panelsManager.Init(
 			inputManager.ResetTilt,
-			() => gridManager.StartGame(false),
+			() =>
+			{
+				gridManager.StartGame(false);
+				environmentManager.Restart();
+			},
 			cameraManager.GetUIPos,
 			() =>
 			{
@@ -71,9 +75,10 @@ public class GameManager : MonoBehaviour
 			() =>
 			{
 				panelsManager.PopPanel(PanelsManager.PanelTag.Win);
-				environmentManager.SwitchColor(ColorTag.Lose);
+				environmentManager.SwitchColor(ColorTag.Win);
 			},
-			hapticsManager.Vibrate
+			hapticsManager.Vibrate,
+			environmentManager.transform
 		);
 	}
 

@@ -60,6 +60,7 @@ public class GridManager : MonoBehaviour
 	Action OnGameOver;
 	Action OnWin;
 	Action Vibrate;
+	Transform environment;
 	(int total, int current) turns;
 	int selectedColorIndex;
 	int starsCount;
@@ -118,7 +119,8 @@ public class GridManager : MonoBehaviour
 		Action<SoundTag> playSound,
 		Action onGameOver,
 		Action onWin,
-		Action vibrate
+		Action vibrate,
+		Transform environment
 	)
 	{
 		SetTilt = setTilt;
@@ -130,9 +132,12 @@ public class GridManager : MonoBehaviour
 		OnGameOver = onGameOver;
 		OnWin = onWin;
 		Vibrate = vibrate;
+		this.environment = environment;
+
 		linkedCells = new List<Cell>();
 		canLink = false;
 		isLinking = false;
+		environment.SetParent(transform);
 
 		GenerateGridLayers();
 	}
@@ -194,7 +199,7 @@ public class GridManager : MonoBehaviour
 		transform.SetPositionAndRotation(showcaseTarget.position, showcaseTarget.rotation);
 
 		SetTilt(false);
-		cellsLayers.ForEach(layer => layer.PositionLayer(1));
+		ExpandLayers(1);
 
 		int layerIndex = cellsLayers.Count - 1;
 		while (layerIndex >= 0)
@@ -219,11 +224,12 @@ public class GridManager : MonoBehaviour
 				Quaternion.Lerp(showcaseTarget.rotation, gameplayTarget.rotation, percent)
 			);
 
-			cellsLayers.ForEach(layer => layer.PositionLayer(1 - percent));
+			ExpandLayers(1 - percent);
 			yield return null;
 		}
 
 		transform.SetPositionAndRotation(gameplayTarget.position, gameplayTarget.rotation);
+		ExpandLayers(0);
 
 		SetTilt(true);
 		canLink = true;
@@ -235,6 +241,7 @@ public class GridManager : MonoBehaviour
 		{
 			yield return new WaitForSeconds(spawnCellDelay);
 
+			// TODO : Pooling this would probably have the highest impact on performances
 			Cell cell = Instantiate(cellPrefab, cellPoint);
 			cell.transform.localPosition = Vector3.zero;
 
@@ -462,6 +469,10 @@ public class GridManager : MonoBehaviour
 	public void ExpandLayers(float percent)
 	{
 		cellsLayers.ForEach(cell => cell.PositionLayer(Mathf.Clamp01(percent)));
+		environment.localPosition =
+			(cellsLayers.Count + 1) *
+			(cellSize + Mathf.Lerp(layerSpacing, expandedSpacing, percent)) *
+			Vector3.forward;
 	}
 
 	public (Color[], List<Requirement>) GetCurrentRequirements() => (cellColors, requiredColors);

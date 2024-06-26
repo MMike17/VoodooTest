@@ -20,6 +20,7 @@ public class EnvironmentManager : MonoBehaviour
 
 	[Header("References")]
 	public List<Circuit> circuits;
+	public Renderer cpuLight;
 	public SpriteRenderer skullHead;
 
 	public enum ColorTag
@@ -33,7 +34,11 @@ public class EnvironmentManager : MonoBehaviour
 
 	public void Restart()
 	{
+		StopAllCoroutines();
+
 		circuits.ForEach(item => item.SetColor(normalColor, normalGlintColor));
+		cpuLight.materials[2].color = normalColor;
+		cpuLight.materials[2].SetColor("_EmissionColor", normalColor);
 		skullHead.color = Color.clear;
 	}
 
@@ -58,30 +63,36 @@ public class EnvironmentManager : MonoBehaviour
 
 	IEnumerator AnimateSwitch(ColorTag tag, Color background, Color glint)
 	{
-		Color.RGBToHSV(
-			normalColor,
-			out float initBackgroundlH,
-			out float initBackgroundS,
-			out float initBackgroundV
-		);
-		Color.RGBToHSV(
-			normalGlintColor,
-			out float initGlintlH,
-			out float initGlintS,
-			out float initGlintV
-		);
-		Color.RGBToHSV(
-			background,
-			out float tgtBackgroundlH,
-			out float tgtBackgroundS,
-			out float tgtBackgroundV
-		);
-		Color.RGBToHSV(
-			glint,
-			out float tgtGlintlH,
-			out float tgtGlintS,
-			out float tgtGlintV
-		);
+		// HSV lerping is another weirder method but it's weird for fail state
+
+		// Color.RGBToHSV(
+		// 	normalColor,
+		// 	out float initBackgroundlH,
+		// 	out float initBackgroundS,
+		// 	out float initBackgroundV
+		// );
+		// Color.RGBToHSV(
+		// 	normalGlintColor,
+		// 	out float initGlintlH,
+		// 	out float initGlintS,
+		// 	out float initGlintV
+		// );
+		// Color.RGBToHSV(
+		// 	background,
+		// 	out float tgtBackgroundlH,
+		// 	out float tgtBackgroundS,
+		// 	out float tgtBackgroundV
+		// );
+		// Color.RGBToHSV(
+		// 	glint,
+		// 	out float tgtGlintlH,
+		// 	out float tgtGlintS,
+		// 	out float tgtGlintV
+		// );
+
+		Color initSkullColor = glint;
+		initSkullColor.a = 0;
+		skullHead.color = initSkullColor;
 		float timer = 0;
 
 		while (timer < switchDuration)
@@ -89,27 +100,35 @@ public class EnvironmentManager : MonoBehaviour
 			timer += Time.deltaTime;
 			float percent = timer / switchDuration;
 
-			Color currentBackground = Color.HSVToRGB(
-				Mathf.Lerp(initBackgroundlH, tgtBackgroundlH, percent),
-				Mathf.Lerp(initBackgroundS, tgtBackgroundS, percent),
-				Mathf.Lerp(initBackgroundV, tgtBackgroundV, percent)
-			);
-			Color currentGlint = Color.HSVToRGB(
-				Mathf.Lerp(initGlintlH, tgtGlintlH, percent),
-				Mathf.Lerp(initGlintS, tgtGlintS, percent),
-				Mathf.Lerp(initGlintV, tgtGlintV, percent)
-			);
+			Color currentBackground = Color.Lerp(normalColor, background, percent);
+			Color currentGlint = Color.Lerp(normalGlintColor, glint, percent);
+
+			// Color currentBackground = Color.HSVToRGB(
+			// 	Mathf.Lerp(initBackgroundlH, tgtBackgroundlH, percent),
+			// 	Mathf.Lerp(initBackgroundS, tgtBackgroundS, percent),
+			// 	Mathf.Lerp(initBackgroundV, tgtBackgroundV, percent)
+			// );
+			// Color currentGlint = Color.HSVToRGB(
+			// 	Mathf.Lerp(initGlintlH, tgtGlintlH, percent),
+			// 	Mathf.Lerp(initGlintS, tgtGlintS, percent),
+			// 	Mathf.Lerp(initGlintV, tgtGlintV, percent)
+			// );
 
 			circuits.ForEach(item => item.SetColor(currentBackground, currentGlint));
 
+			cpuLight.materials[2].color = currentBackground;
+			cpuLight.materials[2].SetColor("_EmissionColor", currentBackground);
+
 			if (tag == ColorTag.Win)
-				skullHead.color = Color.Lerp(Color.clear, glint, percent);
+				skullHead.color = Color.Lerp(initSkullColor, glint, percent);
 
 			yield return null;
 		}
 
 		circuits.ForEach(item => item.SetEnd(background, glint));
-		skullHead.color = glint;
+
+		if (tag == ColorTag.Win)
+			skullHead.color = glint;
 	}
 
 	[Serializable]

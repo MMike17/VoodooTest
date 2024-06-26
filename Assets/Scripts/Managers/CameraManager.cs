@@ -114,10 +114,6 @@ public class CameraManager : MonoBehaviour
 
 	(Vector3, Vector3) GetCameraPosAndDir(Vector2 currentTilt)
 	{
-		// no input
-		// if (currentTilt == Vector2.zero)
-		// 	return (centerTarget.position, centerTarget.forward);
-
 		// determine which side of the grid are we going towards
 		Transform xTarget = centerTarget;
 		Transform yTarget = centerTarget;
