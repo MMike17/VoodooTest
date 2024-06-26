@@ -31,6 +31,7 @@ public class WinPanel : Panel
 	public override void Open()
 	{
 		base.Open();
+		PlaySound(SoundTag.Win);
 		StartCoroutine(AnimateStars());
 	}
 
