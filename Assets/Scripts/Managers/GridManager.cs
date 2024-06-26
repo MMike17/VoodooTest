@@ -288,7 +288,7 @@ public class GridManager : MonoBehaviour
 		Vibrate();
 
 		// stars
-		int rewardStars = Mathf.Max(linkedCells.Count - minLinkLength, 0);
+		int rewardStars = Mathf.Max(linkedCells.FindAll(item => item.colorIndex != -1).Count - minLinkLength, 0);
 		starsCount += rewardStars;
 
 		// clear ui & display stars
